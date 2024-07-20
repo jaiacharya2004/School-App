@@ -20,9 +20,8 @@ import com.example.schoolapp.AuthViewModel
 
 @Composable
 fun StudentHomeScreen(
-    modifier: Modifier = Modifier,
     navController: NavController,
-    authViewModel: AuthViewModel = viewModel()
+    authViewModel: AuthViewModel
 ) {
     val authState by authViewModel.authState.observeAsState()
 
@@ -47,7 +46,7 @@ fun StudentHomeScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Text(text = "Home Page", fontSize = 32.sp, color = Color.Black)
+        Text(text = "Student Home Page", fontSize = 32.sp, color = Color.Black)
         TextButton(onClick = {
             authViewModel.signout()
         }) {

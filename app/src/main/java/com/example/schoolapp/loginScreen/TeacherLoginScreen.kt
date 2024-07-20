@@ -1,3 +1,4 @@
+// TeacherLoginScreen.kt
 package com.example.schoolapp.loginScreen
 
 import androidx.compose.foundation.layout.*
@@ -7,16 +8,6 @@ import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -29,26 +20,29 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.schoolapp.AuthState
 import com.example.schoolapp.AuthViewModel
+import com.example.schoolapp.showToast
+import android.util.Log
+import androidx.compose.runtime.livedata.observeAsState
 
 @Composable
-fun TeacherLoginScreen(navController: NavController, authViewModel: AuthViewModel ) {
+fun TeacherLoginScreen(navController: NavController, authViewModel: AuthViewModel = viewModel()) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
     val authState by authViewModel.authState.observeAsState(AuthState.Unauthenticated)
     val context = LocalContext.current
 
-
-
     LaunchedEffect(authState) {
         when (authState) {
             is AuthState.Authenticated -> {
+                Log.d("TeacherLoginScreen", "Authenticated")
                 navController.navigate("teacher_home") {
                     popUpTo("teacher_login") { inclusive = true }
                 }
             }
             is AuthState.Error -> {
                 val errorMessage = (authState as AuthState.Error).message
+                Log.d("TeacherLoginScreen", "Error: $errorMessage")
                 showToast(context, errorMessage)
             }
             else -> {}

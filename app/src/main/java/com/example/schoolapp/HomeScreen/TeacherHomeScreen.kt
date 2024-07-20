@@ -1,6 +1,5 @@
 package com.example.schoolapp.HomeScreen
 
-
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,9 +20,8 @@ import com.example.schoolapp.AuthViewModel
 
 @Composable
 fun TeacherHomeScreen(
-    modifier: Modifier = Modifier,
     navController: NavController,
-    authViewModel: AuthViewModel = viewModel()
+    authViewModel: AuthViewModel
 ) {
     val authState by authViewModel.authState.observeAsState()
 
@@ -48,7 +46,7 @@ fun TeacherHomeScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Text(text = "Home Page", fontSize = 32.sp, color = Color.Black)
+        Text(text = "Teacher Home Page", fontSize = 32.sp, color = Color.Black)
         TextButton(onClick = {
             authViewModel.signout()
         }) {

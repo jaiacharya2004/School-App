@@ -29,7 +29,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.schoolapp.AuthState
 import com.example.schoolapp.AuthViewModel
-import com.example.schoolapp.loginScreen.showToast
+import com.example.schoolapp.showToast
 
 @Composable
 fun TeacherSignupScreen(navController: NavController, authViewModel: AuthViewModel ) {

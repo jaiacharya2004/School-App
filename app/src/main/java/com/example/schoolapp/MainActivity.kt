@@ -11,6 +11,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.schoolapp.HomeScreen.PrincipalHomeScreen
+import com.example.schoolapp.HomeScreen.StudentHomeScreen
+import com.example.schoolapp.HomeScreen.TeacherHomeScreen
 import com.example.schoolapp.loginScreen.PrincipalLoginScreen
 import com.example.schoolapp.loginScreen.StudentLoginScreen
 import com.example.schoolapp.loginScreen.TeacherLoginScreen
@@ -41,14 +43,11 @@ fun AppNavigation(navController: NavHostController) {
         composable("principal_home") { PrincipalHomeScreen(navController, authViewModel) }
         composable("principal_login") { PrincipalLoginScreen(navController, authViewModel) }
         composable("principal_signup") { PrincipalSignupScreen(navController, authViewModel) }
-        composable("teacher_home") { PrincipalHomeScreen(navController, authViewModel) }
+        composable("teacher_home") { TeacherHomeScreen(navController, authViewModel) }
         composable("teacher_login") { TeacherLoginScreen(navController, authViewModel) }
         composable("teacher_signup") { TeacherSignupScreen(navController, authViewModel) }
-        composable("student_home") { PrincipalHomeScreen(navController, authViewModel) }
+        composable("student_home") { StudentHomeScreen(navController, authViewModel) }
         composable("student_login") { StudentLoginScreen(navController, authViewModel) }
         composable("student_signup") { StudentSignupScreen(navController, authViewModel) }
     }
 }
-
-
-
