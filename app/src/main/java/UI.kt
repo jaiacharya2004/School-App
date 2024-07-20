@@ -19,13 +19,11 @@ import androidx.navigation.NavController
 import com.example.schoolapp.R
 
 @Composable
-fun ID() {
+fun PrincipalHomeScreen(navController: NavController) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.LightGray),
-
-
+            .background(Color.LightGray)
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -35,63 +33,68 @@ fun ID() {
             Card(
                 shape = RoundedCornerShape(8.dp),
                 modifier = Modifier
-                    .padding(16.dp) // Adjust padding as needed
-                    .size(200.dp)
+                    .padding(16.dp)
+                    .size(230.dp)
                     .clickable {
+                        navController.navigate("principal_login")
                     }
             ) {
                 Text(
-                    text = "         Principal Login",
-                    modifier = Modifier,
+                    text = "Principal Login",
+                    modifier = Modifier.padding(16.dp),
                     fontWeight = FontWeight.Bold,
                 )
                 Image(
                     painter = painterResource(id = R.drawable.principal),
-                    contentDescription = "Vertical Card Image",
+                    contentDescription = "Principal Image",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.fillMaxSize()
                 )
             }
 
-            Spacer(modifier = Modifier.height(16.dp)) // Space between cards
+            Spacer(modifier = Modifier.height(16.dp))
 
             Card(
                 shape = RoundedCornerShape(8.dp),
                 modifier = Modifier
-                    .padding(16.dp) // Adjust padding as needed
-                    .size(200.dp)
-                    .clickable { }
+                    .padding(16.dp)
+                    .size(230.dp)
+                    .clickable {
+                        navController.navigate("teacher_login")
+                    }
             ) {
                 Text(
-                    text = "         Teacher Login",
-                    modifier = Modifier,
+                    text = "Teacher Login",
+                    modifier = Modifier.padding(16.dp),
                     fontWeight = FontWeight.Bold,
                 )
                 Image(
                     painter = painterResource(id = R.drawable.teacher),
-                    contentDescription = "Vertical Card Image",
+                    contentDescription = "Teacher Image",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.fillMaxSize()
                 )
             }
 
-            Spacer(modifier = Modifier.height(16.dp)) // Space between cards
+            Spacer(modifier = Modifier.height(16.dp))
 
             Card(
                 shape = RoundedCornerShape(8.dp),
                 modifier = Modifier
-                    .padding(16.dp) // Adjust padding as needed
-                    .size(200.dp)
-                    .clickable { }
+                    .padding(16.dp)
+                    .size(230.dp)
+                    .clickable {
+                        navController.navigate("student_login")
+                    }
             ) {
                 Text(
-                    text = "         Student Login",
-                    modifier = Modifier,
+                    text = "Student Login",
+                    modifier = Modifier.padding(16.dp),
                     fontWeight = FontWeight.Bold,
                 )
                 Image(
                     painter = painterResource(id = R.drawable.student),
-                    contentDescription = "Vertical Card Image",
+                    contentDescription = "Student Image",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.fillMaxSize()
                 )
