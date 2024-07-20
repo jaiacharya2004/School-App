@@ -1,15 +1,16 @@
 package com.example.schoolapp
 
-import PrincipalHomeScreen
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.schoolapp.HomeScreen.PrincipalHomeScreen
 import com.example.schoolapp.loginScreen.PrincipalLoginScreen
 import com.example.schoolapp.loginScreen.StudentLoginScreen
 import com.example.schoolapp.loginScreen.TeacherLoginScreen
@@ -33,13 +34,15 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun AppNavigation(navController: NavHostController) {
-    NavHost(navController = navController, startDestination = "principal_home") {
+    NavHost(navController = navController, startDestination = "role_selection_screen") {
+        composable("role_selection_screen") { RoleSelectionScreen(navController) }
+        composable("principal_home") { PrincipalHomeScreen(navController = navController, authViewModel = viewModel()) }
+        composable("principal_login") { PrincipalLoginScreen(navController) }
+        composable("principal_signup") { PrincipalSignupScreen(navController) }
         composable("teacher_login") { TeacherLoginScreen(navController) }
         composable("teacher_signup") { TeacherSignupScreen(navController) }
         composable("student_login") { StudentLoginScreen(navController) }
         composable("student_signup") { StudentSignupScreen(navController) }
-        composable("principal_login") { PrincipalLoginScreen(navController) }
-        composable("principal_signup") { PrincipalSignupScreen(navController) }
-        composable("principal_home") { PrincipalHomeScreen(navController) }
     }
 }
+

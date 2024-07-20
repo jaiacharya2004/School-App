@@ -1,3 +1,5 @@
+package com.example.schoolapp
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -8,18 +10,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.schoolapp.R
 
 @Composable
-fun PrincipalHomeScreen(navController: NavController) {
+fun RoleSelectionScreen(navController: NavController) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -39,17 +38,23 @@ fun PrincipalHomeScreen(navController: NavController) {
                         navController.navigate("principal_login")
                     }
             ) {
-                Text(
-                    text = "Principal Login",
-                    modifier = Modifier.padding(16.dp),
-                    fontWeight = FontWeight.Bold,
-                )
-                Image(
-                    painter = painterResource(id = R.drawable.principal),
-                    contentDescription = "Principal Image",
-                    contentScale = ContentScale.Crop,
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center,
                     modifier = Modifier.fillMaxSize()
-                )
+                ) {
+                    Text(
+                        text = "Principal Login",
+                        modifier = Modifier.padding(16.dp),
+                        fontWeight = FontWeight.Bold,
+                    )
+                    Image(
+                        painter = painterResource(id = R.drawable.principal),
+                        contentDescription = "Principal Image",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -63,17 +68,23 @@ fun PrincipalHomeScreen(navController: NavController) {
                         navController.navigate("teacher_login")
                     }
             ) {
-                Text(
-                    text = "Teacher Login",
-                    modifier = Modifier.padding(16.dp),
-                    fontWeight = FontWeight.Bold,
-                )
-                Image(
-                    painter = painterResource(id = R.drawable.teacher),
-                    contentDescription = "Teacher Image",
-                    contentScale = ContentScale.Crop,
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center,
                     modifier = Modifier.fillMaxSize()
-                )
+                ) {
+                    Text(
+                        text = "Teacher Login",
+                        modifier = Modifier.padding(16.dp),
+                        fontWeight = FontWeight.Bold,
+                    )
+                    Image(
+                        painter = painterResource(id = R.drawable.teacher),
+                        contentDescription = "Teacher Image",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -87,17 +98,23 @@ fun PrincipalHomeScreen(navController: NavController) {
                         navController.navigate("student_login")
                     }
             ) {
-                Text(
-                    text = "Student Login",
-                    modifier = Modifier.padding(16.dp),
-                    fontWeight = FontWeight.Bold,
-                )
-                Image(
-                    painter = painterResource(id = R.drawable.student),
-                    contentDescription = "Student Image",
-                    contentScale = ContentScale.Crop,
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center,
                     modifier = Modifier.fillMaxSize()
-                )
+                ) {
+                    Text(
+                        text = "Student Login",
+                        modifier = Modifier.padding(16.dp),
+                        fontWeight = FontWeight.Bold,
+                    )
+                    Image(
+                        painter = painterResource(id = R.drawable.student),
+                        contentDescription = "Student Image",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
             }
         }
     }

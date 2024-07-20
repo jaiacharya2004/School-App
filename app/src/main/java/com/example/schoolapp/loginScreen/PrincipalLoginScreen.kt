@@ -36,9 +36,11 @@ fun PrincipalLoginScreen(navController: NavController, authViewModel: AuthViewMo
                 }
             }
             is AuthState.Error -> {
+                // Handle error (show a message, etc.)
                 val errorMessage = (authState as AuthState.Error).message
                 // Show the error message in a snackbar, toast, etc.
-                // For example, using a Composable Snackbar (not implemented here)
+                // You can use a snackbar here
+                // For example, using a Composable Snackbar
             }
             else -> {}
         }
@@ -67,6 +69,7 @@ fun PrincipalLoginScreen(navController: NavController, authViewModel: AuthViewMo
             visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
             trailingIcon = {
                 val image = if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
+
                 IconButton(onClick = { passwordVisible = !passwordVisible }) {
                     Icon(imageVector = image, contentDescription = if (passwordVisible) "Hide password" else "Show password")
                 }
