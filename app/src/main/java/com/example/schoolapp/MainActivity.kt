@@ -34,15 +34,21 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun AppNavigation(navController: NavHostController) {
+    val authViewModel: AuthViewModel = viewModel()
+
     NavHost(navController = navController, startDestination = "role_selection_screen") {
         composable("role_selection_screen") { RoleSelectionScreen(navController) }
-        composable("principal_home") { PrincipalHomeScreen(navController = navController, authViewModel = viewModel()) }
-        composable("principal_login") { PrincipalLoginScreen(navController) }
-        composable("principal_signup") { PrincipalSignupScreen(navController) }
-        composable("teacher_login") { TeacherLoginScreen(navController) }
-        composable("teacher_signup") { TeacherSignupScreen(navController) }
-        composable("student_login") { StudentLoginScreen(navController) }
-        composable("student_signup") { StudentSignupScreen(navController) }
+        composable("principal_home") { PrincipalHomeScreen(navController, authViewModel) }
+        composable("principal_login") { PrincipalLoginScreen(navController, authViewModel) }
+        composable("principal_signup") { PrincipalSignupScreen(navController, authViewModel) }
+        composable("teacher_home") { PrincipalHomeScreen(navController, authViewModel) }
+        composable("teacher_login") { TeacherLoginScreen(navController, authViewModel) }
+        composable("teacher_signup") { TeacherSignupScreen(navController, authViewModel) }
+        composable("student_home") { PrincipalHomeScreen(navController, authViewModel) }
+        composable("student_login") { StudentLoginScreen(navController, authViewModel) }
+        composable("student_signup") { StudentSignupScreen(navController, authViewModel) }
     }
 }
+
+
 

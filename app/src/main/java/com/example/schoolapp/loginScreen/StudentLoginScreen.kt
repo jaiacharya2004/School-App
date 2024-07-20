@@ -1,6 +1,5 @@
 package com.example.schoolapp.loginScreen
 
-import androidx.compose.material3.Text
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -18,29 +17,25 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.schoolapp.AuthState
+import com.example.schoolapp.AuthViewModel
 
 @Composable
-fun StudentLoginScreen(navController: NavController) {
-
+fun StudentLoginScreen(navController: NavController, authViewModel: AuthViewModel) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
 
-    Text(text = "Student Login Screen")
+    val authState by authViewModel.authState.observeAsState(AuthState.Unauthenticated)
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -76,26 +71,41 @@ fun StudentLoginScreen(navController: NavController) {
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(onClick = {
-            // Handle login logic here
+            authViewModel.login(email, password)
         }) {
             Text(text = "Login")
         }
+
         Spacer(modifier = Modifier.height(8.dp))
 
         TextButton(onClick = {
             navController.navigate("student_signup") {
-                // Clear the back stack so that the user is directed to the home screen on back press
                 popUpTo("student_login") { inclusive = true }
                 launchSingleTop = true
             }
         }) {
-            Text(text = "Don't have an account, SignUp")
+            Text(text = "Don't have an account, Sign Up")
+        }
+    }
+
+    // Handle authState changes
+    LaunchedEffect(authState) {
+        when (authState) {
+            is AuthState.Authenticated -> {
+                navController.navigate("home") {
+                    popUpTo("student_login") { inclusive = true }
+                    launchSingleTop = true
+                }
+            }
+            is AuthState.Error -> {
+                // Handle error state, show error message or UI
+                println("Error: ${(authState as AuthState.Error).message}")
+            }
+            AuthState.Loading -> {
+                // Optionally show a loading spinner
+                println("Loading...")
+            }
+            else -> {}
         }
     }
 }
-
-
-
-
-
-

@@ -1,5 +1,6 @@
 package com.example.schoolapp.HomeScreen
 
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,13 +14,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.example.schoolapp.AuthState
 import com.example.schoolapp.AuthViewModel
 
 @Composable
-fun PrincipalHomeScreen(
+fun TeacherHomeScreen(
+    modifier: Modifier = Modifier,
     navController: NavController,
     authViewModel: AuthViewModel = viewModel()
 ) {
@@ -28,8 +30,8 @@ fun PrincipalHomeScreen(
     LaunchedEffect(authState) {
         when (authState) {
             is AuthState.Unauthenticated -> {
-                navController.navigate("principal_login") {
-                    popUpTo("principal_home") { inclusive = true }
+                navController.navigate("teacher_login") {
+                    popUpTo("teacher_home") { inclusive = true }
                 }
             }
             is AuthState.Error -> {

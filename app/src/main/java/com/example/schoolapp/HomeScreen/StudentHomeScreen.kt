@@ -13,13 +13,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.example.schoolapp.AuthState
 import com.example.schoolapp.AuthViewModel
 
 @Composable
-fun PrincipalHomeScreen(
+fun StudentHomeScreen(
+    modifier: Modifier = Modifier,
     navController: NavController,
     authViewModel: AuthViewModel = viewModel()
 ) {
@@ -28,8 +29,8 @@ fun PrincipalHomeScreen(
     LaunchedEffect(authState) {
         when (authState) {
             is AuthState.Unauthenticated -> {
-                navController.navigate("principal_login") {
-                    popUpTo("principal_home") { inclusive = true }
+                navController.navigate("student_login") {
+                    popUpTo("student_home") { inclusive = true }
                 }
             }
             is AuthState.Error -> {

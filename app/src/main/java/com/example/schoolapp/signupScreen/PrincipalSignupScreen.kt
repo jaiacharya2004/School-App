@@ -19,6 +19,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -30,17 +31,34 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.schoolapp.AuthState
 import com.example.schoolapp.AuthViewModel
 
 @Composable
-fun PrincipalSignupScreen(navController: NavController) {
+fun PrincipalSignupScreen(navController: NavController, authViewModel: AuthViewModel = viewModel()) {
 
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
+    val authState by authViewModel.authState.observeAsState()
 
-    Text(text = "Principal Sign Up Screen")
+    LaunchedEffect(authState) {
+        when (authState) {
+            is AuthState.Authenticated -> {
+                navController.navigate("principal_home") {
+                    popUpTo("principal_signup") { inclusive = true }
+                }
+            }
+            is AuthState.Error -> {
+                // Show error message (e.g., using a Snackbar or Toast)
+                val errorMessage = (authState as AuthState.Error).message
+                // Handle the error display here
+            }
+            else -> {}
+        }
+    }
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -65,7 +83,6 @@ fun PrincipalSignupScreen(navController: NavController) {
             visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
             trailingIcon = {
                 val image = if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
-
                 IconButton(onClick = { passwordVisible = !passwordVisible }) {
                     Icon(imageVector = image, contentDescription = if (passwordVisible) "Hide password" else "Show password")
                 }
@@ -76,11 +93,7 @@ fun PrincipalSignupScreen(navController: NavController) {
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(onClick = {
-            // Handle sign-up logic here
-            navController.navigate("home") {
-                popUpTo("principal_login") { inclusive = true }
-                launchSingleTop = true
-            }
+            authViewModel.signup(email, password)
         }) {
             Text(text = "Sign Up")
         }
@@ -92,7 +105,7 @@ fun PrincipalSignupScreen(navController: NavController) {
                 launchSingleTop = true
             }
         }) {
-            Text(text = "Already have an account, Login")
+            Text(text = "Already have an account? Login")
         }
     }
 }

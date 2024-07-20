@@ -10,6 +10,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -19,14 +20,19 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.schoolapp.AuthState
 import com.example.schoolapp.AuthViewModel
+import android.content.Context
+import android.widget.Toast
+
+
+
 
 @Composable
 fun PrincipalLoginScreen(navController: NavController, authViewModel: AuthViewModel = viewModel()) {
-
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
     val authState by authViewModel.authState.observeAsState()
+    val context = LocalContext.current
 
     LaunchedEffect(authState) {
         when (authState) {
@@ -36,11 +42,9 @@ fun PrincipalLoginScreen(navController: NavController, authViewModel: AuthViewMo
                 }
             }
             is AuthState.Error -> {
-                // Handle error (show a message, etc.)
+                // Show the error message using Toast
                 val errorMessage = (authState as AuthState.Error).message
-                // Show the error message in a snackbar, toast, etc.
-                // You can use a snackbar here
-                // For example, using a Composable Snackbar
+                showToast(context, errorMessage)
             }
             else -> {}
         }
@@ -96,3 +100,10 @@ fun PrincipalLoginScreen(navController: NavController, authViewModel: AuthViewMo
         }
     }
 }
+
+
+fun showToast(context: Context, message: String) {
+    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+}
+
+
