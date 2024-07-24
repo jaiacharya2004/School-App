@@ -1,5 +1,4 @@
-// TeacherLoginScreen.kt
-package com.example.schoolapp.loginScreen
+package com.example.schoolapp.com.example.schoolapp.authentication.loginScreen.teacherauth
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
@@ -8,6 +7,16 @@ import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -21,11 +30,9 @@ import androidx.navigation.NavController
 import com.example.schoolapp.AuthState
 import com.example.schoolapp.AuthViewModel
 import com.example.schoolapp.showToast
-import android.util.Log
-import androidx.compose.runtime.livedata.observeAsState
 
 @Composable
-fun TeacherLoginScreen(navController: NavController, authViewModel: AuthViewModel = viewModel()) {
+fun TeacherSignupScreen(navController: NavController, authViewModel: AuthViewModel ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
@@ -35,14 +42,12 @@ fun TeacherLoginScreen(navController: NavController, authViewModel: AuthViewMode
     LaunchedEffect(authState) {
         when (authState) {
             is AuthState.Authenticated -> {
-                Log.d("TeacherLoginScreen", "Authenticated")
                 navController.navigate("teacher_home") {
-                    popUpTo("teacher_login") { inclusive = true }
+                    popUpTo("teacher_signup") { inclusive = true }
                 }
             }
             is AuthState.Error -> {
                 val errorMessage = (authState as AuthState.Error).message
-                Log.d("TeacherLoginScreen", "Error: $errorMessage")
                 showToast(context, errorMessage)
             }
             else -> {}
@@ -54,7 +59,7 @@ fun TeacherLoginScreen(navController: NavController, authViewModel: AuthViewMode
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = "Teacher Login Screen", fontSize = 32.sp)
+        Text(text = "Teacher Sign Up Screen", fontSize = 32.sp)
         Spacer(modifier = Modifier.height(16.dp))
 
         OutlinedTextField(
@@ -83,19 +88,19 @@ fun TeacherLoginScreen(navController: NavController, authViewModel: AuthViewMode
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(onClick = {
-            authViewModel.login(email, password)
+            authViewModel.signup(email, password)
         }) {
-            Text(text = "Login")
+            Text(text = "Sign Up")
         }
         Spacer(modifier = Modifier.height(8.dp))
 
         TextButton(onClick = {
-            navController.navigate("teacher_signup") {
-                popUpTo("teacher_login") { inclusive = true }
+            navController.navigate("teacher_login") {
+                popUpTo("teacher_signup") { inclusive = true }
                 launchSingleTop = true
             }
         }) {
-            Text(text = "Don't have an account? Sign Up")
+            Text(text = "Already have an account? Login")
         }
     }
 }

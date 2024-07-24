@@ -1,4 +1,4 @@
-package com.example.schoolapp.loginScreen
+package com.example.schoolapp.com.example.schoolapp.authentication.loginScreen.schoolHead
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions

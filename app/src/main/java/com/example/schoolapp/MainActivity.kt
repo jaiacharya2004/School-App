@@ -13,12 +13,12 @@ import androidx.navigation.compose.rememberNavController
 import com.example.schoolapp.HomeScreen.PrincipalHomeScreen
 import com.example.schoolapp.HomeScreen.StudentHomeScreen
 import com.example.schoolapp.HomeScreen.TeacherHomeScreen
-import com.example.schoolapp.loginScreen.PrincipalLoginScreen
-import com.example.schoolapp.loginScreen.StudentLoginScreen
-import com.example.schoolapp.loginScreen.TeacherLoginScreen
-import com.example.schoolapp.signupScreen.PrincipalSignupScreen
-import com.example.schoolapp.signupScreen.StudentSignupScreen
-import com.example.schoolapp.signupScreen.TeacherSignupScreen
+import com.example.schoolapp.com.example.schoolapp.authentication.loginScreen.schoolHead.PrincipalLoginScreen
+import com.example.schoolapp.com.example.schoolapp.authentication.loginScreen.studentauth.StudentLoginScreen
+import com.example.schoolapp.com.example.schoolapp.authentication.loginScreen.teacherauth.TeacherLoginScreen
+import com.example.schoolapp.com.example.schoolapp.authentication.loginScreen.schoolHead.PrincipalSignupScreen
+import com.example.schoolapp.com.example.schoolapp.authentication.loginScreen.studentauth.StudentSignupScreen
+import com.example.schoolapp.com.example.schoolapp.authentication.loginScreen.teacherauth.TeacherSignupScreen
 import com.example.schoolapp.ui.theme.SchoolAppTheme
 
 class MainActivity : ComponentActivity() {

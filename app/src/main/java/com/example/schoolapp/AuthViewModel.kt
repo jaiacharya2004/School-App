@@ -9,8 +9,15 @@ import android.util.Log
 class AuthViewModel : ViewModel() {
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
 
-    private val _authState = MutableLiveData<AuthState>()
-    val authState: LiveData<AuthState> = _authState
+    private val _SchoolAuthState = MutableLiveData<AuthState>()
+    val authState: LiveData<AuthState> = _SchoolAuthState
+
+    private val _studentauthState = MutableLiveData<AuthState>()
+    val StudentAuthState: LiveData<AuthState> = _studentauthState
+
+    private val _teacherauthState = MutableLiveData<AuthState>()
+    val TeacherAuthState: LiveData<AuthState> = _teacherauthState
+
 
     init {
         checkAuthStatus()
@@ -18,53 +25,53 @@ class AuthViewModel : ViewModel() {
 
     fun checkAuthStatus() {
         if (auth.currentUser == null) {
-            _authState.value = AuthState.Unauthenticated
+            _SchoolAuthState.value = AuthState.Unauthenticated
         } else {
-            _authState.value = AuthState.Authenticated
+            _SchoolAuthState.value = AuthState.Authenticated
         }
     }
 
     fun login(email: String, password: String) {
         if (email.isEmpty() || password.isEmpty()) {
-            _authState.value = AuthState.Error("Email or Password can't be empty")
+            _SchoolAuthState.value = AuthState.Error("Email or Password can't be empty")
             return
         }
 
-        _authState.value = AuthState.Loading
+        _SchoolAuthState.value = AuthState.Loading
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     Log.d("AuthViewModel", "Login successful")
-                    _authState.value = AuthState.Authenticated
+                    _SchoolAuthState.value = AuthState.Authenticated
                 } else {
                     Log.d("AuthViewModel", "Login failed: ${task.exception?.message}")
-                    _authState.value = AuthState.Error(task.exception?.message ?: "Something went wrong")
+                    _SchoolAuthState.value = AuthState.Error(task.exception?.message ?: "Something went wrong")
                 }
             }
     }
 
     fun signup(email: String, password: String) {
         if (email.isEmpty() || password.isEmpty()) {
-            _authState.value = AuthState.Error("Email or Password can't be empty")
+            _SchoolAuthState.value = AuthState.Error("Email or Password can't be empty")
             return
         }
 
-        _authState.value = AuthState.Loading
+        _SchoolAuthState.value = AuthState.Loading
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     Log.d("AuthViewModel", "Signup successful")
-                    _authState.value = AuthState.Authenticated
+                    _SchoolAuthState.value = AuthState.Authenticated
                 } else {
                     Log.d("AuthViewModel", "Signup failed: ${task.exception?.message}")
-                    _authState.value = AuthState.Error(task.exception?.message ?: "Something went wrong")
+                    _SchoolAuthState.value = AuthState.Error(task.exception?.message ?: "Something went wrong")
                 }
             }
     }
 
     fun signout() {
         auth.signOut()
-        _authState.value = AuthState.Unauthenticated
+        _SchoolAuthState.value = AuthState.Unauthenticated
     }
 }
 
