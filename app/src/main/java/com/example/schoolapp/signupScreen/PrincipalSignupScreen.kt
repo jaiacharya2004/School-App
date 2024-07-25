@@ -84,6 +84,8 @@ fun PrincipalSignupScreen(navController: NavController, authViewModel: AuthViewM
                             .fillMaxWidth()
                             .height(200.dp) // Adjust height as needed
                             .clip(MaterialTheme.shapes.medium)
+                            .offset(y = 100.dp)
+
                     )
                     Spacer(modifier = Modifier.height(16.dp))
 
