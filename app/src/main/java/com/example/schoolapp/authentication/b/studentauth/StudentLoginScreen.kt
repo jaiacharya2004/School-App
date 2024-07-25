@@ -1,24 +1,16 @@
-package com.example.schoolapp.signupScreen
+// StudentLoginScreen.kt
+package com.example.schoolapp.authentication.b.studentauth
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -26,71 +18,66 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.schoolapp.AuthState
-import com.example.schoolapp.AuthViewModel
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import com.example.schoolapp.R
-import com.example.schoolapp.com.example.schoolapp.showToast
+import com.example.schoolapp.com.example.schoolapp.authentication.b.studentauth.StudentSignupViewModel
 
 @Composable
-fun PrincipalSignupScreen(navController: NavController, authViewModel: AuthViewModel = viewModel()) {
+fun StudentLoginScreen(navController: NavController) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
-    val authState by authViewModel.authState.observeAsState()
     val context = LocalContext.current
 
-    LaunchedEffect(authState) {
-        when (authState) {
-            is AuthState.Authenticated -> {
-                navController.navigate("principal_home") {
-                    popUpTo("principal_signup") { inclusive = true }
-                }
-            }
-            is AuthState.Error -> {
-                val errorMessage = (authState as AuthState.Error).message
-                showToast(context, errorMessage)
-            }
-            else -> {}
-        }
-    }
+
 
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.Black)
             .padding(16.dp)
-    ) {
+    ){
         Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Card(
+            Card (
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp),
+
                 elevation = CardDefaults.cardElevation(4.dp),
-                colors = CardDefaults.cardColors(containerColor = Color.DarkGray)
-            ) {
+                colors = CardDefaults.cardColors(containerColor = Color.DarkGray),
+
+
+                ) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(16.dp)
                 ) {
                     Image(
-                        painter = painterResource(id = R.drawable.principal_login), // Replace with your image resource
+                        painter = painterResource(id = R.drawable.student_signup), // Replace with your image resource
                         contentDescription = "Signup Image",
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(200.dp) // Adjust height as needed
                             .clip(MaterialTheme.shapes.medium)
-                            .offset(y = 100.dp)
-
                     )
                     Spacer(modifier = Modifier.height(16.dp))
 
+
                     Text(
-                        text = "Principal Sign Up",
+                        text = "     Student Login ",
                         fontSize = 32.sp,
                         color = Color.Cyan,
                         fontWeight = FontWeight.Medium,
@@ -116,13 +103,18 @@ fun PrincipalSignupScreen(navController: NavController, authViewModel: AuthViewM
                         value = password,
                         onValueChange = { password = it },
                         label = { Text(text = "Password") },
+
                         modifier = Modifier
                             .fillMaxWidth()
                             .width(100.dp),
                         shape = RoundedCornerShape(20.dp),
+
+
+
                         visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                         trailingIcon = {
-                            val image = if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
+                            val image =
+                                if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
 
                             IconButton(onClick = { passwordVisible = !passwordVisible }) {
                                 Icon(
@@ -139,29 +131,32 @@ fun PrincipalSignupScreen(navController: NavController, authViewModel: AuthViewM
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    Box(
+                    Box (
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp),
                         contentAlignment = Alignment.Center
                     ) {
-                        Button(
-                            onClick = { authViewModel.signup(email, password) },
+
+                        Button(onClick = {
+
+                        },
                             colors = ButtonDefaults.buttonColors(Color.Cyan),
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier
+                                .fillMaxWidth(),
                         ) {
-                            Text(text = "Sign Up")
+                            Text(text = "Login")
                         }
+                        Spacer(modifier = Modifier.height(8.dp))
                     }
-                    Spacer(modifier = Modifier.height(8.dp))
                     TextButton(onClick = {
-                        navController.navigate("principal_login") {
-                            popUpTo("principal_signup") { inclusive = true }
+                        navController.navigate("student_signup") {
+                            popUpTo("student_login") { inclusive = true }
                             launchSingleTop = true
                         }
                     }) {
                         Text(
-                            text = "Already have an account? Login",
+                            text = "             Don't have an account? Sign Up",
                             color = Color.Cyan
                         )
                     }
@@ -170,3 +165,4 @@ fun PrincipalSignupScreen(navController: NavController, authViewModel: AuthViewM
         }
     }
 }
+

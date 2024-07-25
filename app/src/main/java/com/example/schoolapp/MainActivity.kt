@@ -10,15 +10,18 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.schoolapp.HomeScreen.PrincipalHomeScreen
-import com.example.schoolapp.HomeScreen.StudentHomeScreen
-import com.example.schoolapp.HomeScreen.TeacherHomeScreen
-import com.example.schoolapp.loginScreen.PrincipalLoginScreen
-import com.example.schoolapp.loginScreen.StudentLoginScreen
-import com.example.schoolapp.signupScreen.PrincipalSignupScreen
-import com.example.schoolapp.signupScreen.StudentSignupScreen
-import com.example.schoolapp.loginScreen.TeacherLoginScreen
-import com.example.schoolapp.signupScreen.TeacherSignupScreen
+import com.example.schoolapp.authentication.b.schoolHead.PrincipalHomeScreen
+import com.example.schoolapp.authentication.b.studentauth.StudentHomeScreen
+import com.example.schoolapp.authentication.b.teacherauth.TeacherHomeScreen
+<<<<<<< HEAD
+import com.example.schoolapp.authentication.b.schoolHead.PrincipalLoginScreen
+import com.example.schoolapp.authentication.b.studentauth.StudentLoginScreen
+import com.example.schoolapp.authentication.b.schoolHead.PrincipalSignupScreen
+import com.example.schoolapp.authentication.b.studentauth.StudentSignupScreen
+import com.example.schoolapp.authentication.b.teacherauth.TeacherLoginScreen
+import com.example.schoolapp.authentication.b.teacherauth.TeacherSignupScreen
+=======
+>>>>>>> 1fa3b367e78b53a4003d59b7324d457dddfb2d0e
 import com.example.schoolapp.ui.theme.SchoolAppTheme
 
 class MainActivity : ComponentActivity() {

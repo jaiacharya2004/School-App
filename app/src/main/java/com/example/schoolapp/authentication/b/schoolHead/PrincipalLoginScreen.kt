@@ -1,5 +1,7 @@
-package com.example.schoolapp.signupScreen
+package com.example.schoolapp.authentication.b.schoolHead
 
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -26,33 +28,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.schoolapp.AuthState
-import com.example.schoolapp.AuthViewModel
 import com.example.schoolapp.R
-import com.example.schoolapp.com.example.schoolapp.showToast
 
 @Composable
-fun StudentSignupScreen(navController: NavController, authViewModel: AuthViewModel = viewModel()) {
+fun PrincipalLoginScreen(navController: NavController,) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
-    val authState by authViewModel.authState.observeAsState(AuthState.Unauthenticated)
     val context = LocalContext.current
 
-    LaunchedEffect(authState) {
-        when (authState) {
-            is AuthState.Authenticated -> {
-                navController.navigate("student_home") {
-                    popUpTo("student_signup") { inclusive = true }
-                }
-            }
-            is AuthState.Error -> {
-                val errorMessage = (authState as AuthState.Error).message
-                showToast(context, errorMessage)
-            }
-            else -> {}
-        }
-    }
 
     Box(
         modifier = Modifier
@@ -78,7 +62,7 @@ fun StudentSignupScreen(navController: NavController, authViewModel: AuthViewMod
                         .padding(16.dp)
                 ) {
                     Image(
-                        painter = painterResource(id = R.drawable.student_signup), // Replace with your image resource
+                        painter = painterResource(id = R.drawable.principal_login), // Replace with your image resource
                         contentDescription = "Signup Image",
                         modifier = Modifier
                             .fillMaxWidth()
@@ -88,7 +72,7 @@ fun StudentSignupScreen(navController: NavController, authViewModel: AuthViewMod
                     Spacer(modifier = Modifier.height(16.dp))
 
                     Text(
-                        text = "     Student Sign Up",
+                        text = "     Principal Login",
                         fontSize = 32.sp,
                         color = Color.Cyan,
                         fontWeight = FontWeight.Medium,
@@ -144,22 +128,22 @@ fun StudentSignupScreen(navController: NavController, authViewModel: AuthViewMod
                         contentAlignment = Alignment.Center
                     ) {
                         Button(
-                            onClick = { authViewModel.signup(email, password) },
+                            onClick = {  },
                             colors = ButtonDefaults.buttonColors(Color.Cyan),
                             modifier = Modifier.fillMaxWidth()
                         ) {
-                            Text(text = "Sign Up")
+                            Text(text = "Login")
                         }
                     }
                     Spacer(modifier = Modifier.height(8.dp))
                     TextButton(onClick = {
-                        navController.navigate("student_login") {
-                            popUpTo("student_signup") { inclusive = true }
+                        navController.navigate("principal_signup") {
+                            popUpTo("principal_login") { inclusive = true }
                             launchSingleTop = true
                         }
                     }) {
                         Text(
-                            text = "             Already have an account? Login",
+                            text = "             Don't have an account? Sign Up",
                             color = Color.Cyan
                         )
                     }
@@ -167,4 +151,8 @@ fun StudentSignupScreen(navController: NavController, authViewModel: AuthViewMod
             }
         }
     }
+}
+
+fun showToast(context: Context, message: String) {
+    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
 }
