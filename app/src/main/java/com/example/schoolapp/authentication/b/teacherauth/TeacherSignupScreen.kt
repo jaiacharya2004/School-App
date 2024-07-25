@@ -1,6 +1,10 @@
-package com.example.schoolapp.com.example.schoolapp.authentication.loginScreen.teacherauth
+package com.example.schoolapp.authentication.b.teacherauth
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
@@ -19,14 +23,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+<<<<<<< HEAD
 import com.example.schoolapp.AuthState
 import com.example.schoolapp.AuthViewModel
 import com.example.schoolapp.com.example.schoolapp.authentication.b.teacherauth.TeacherSignupViewModel
@@ -36,9 +45,18 @@ import com.example.schoolapp.showToast
 fun TeacherSignupScreen(navController: NavController, authViewModel: AuthViewModel ) {
     var email = remember { mutableStateOf("") }
     var password = remember { mutableStateOf("") }
+=======
+
+import com.example.schoolapp.R
+
+@Composable
+fun TeacherSignupScreen(navController: NavController, ) {
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+>>>>>>> 8a21b599962d44d0800fab7b9e5ded4023913d73
     var passwordVisible by remember { mutableStateOf(false) }
-    val authState by authViewModel.authState.observeAsState(AuthState.Unauthenticated)
     val context = LocalContext.current
+<<<<<<< HEAD
     val teacherSignupViewModel=remember{TeacherSignupViewModel()}
     LaunchedEffect(authState) {
         when (authState) {
@@ -54,38 +72,116 @@ fun TeacherSignupScreen(navController: NavController, authViewModel: AuthViewMod
             else -> {}
         }
     }
+=======
 
+>>>>>>> 8a21b599962d44d0800fab7b9e5ded4023913d73
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Black)
+            .padding(16.dp)
+    ){
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = "Teacher Sign Up Screen", fontSize = 32.sp)
-        Spacer(modifier = Modifier.height(16.dp))
+        Card (
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
 
-        OutlinedTextField(
-            value = email,
-            onValueChange = { email = it },
-            label = { Text(text = "Email") }
-        )
+            elevation = CardDefaults.cardElevation(4.dp),
+            colors = CardDefaults.cardColors(containerColor = Color.DarkGray),
 
-        Spacer(modifier = Modifier.height(8.dp))
 
-        OutlinedTextField(
-            value = password,
-            onValueChange = { password = it },
-            label = { Text(text = "Password") },
-            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-            trailingIcon = {
-                val image = if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
+            ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.teacher_signup_3), // Replace with your image resource
+                    contentDescription = "Signup Image",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(200.dp) // Adjust height as needed
+                        .clip(MaterialTheme.shapes.medium)
+                )
+                Spacer(modifier = Modifier.height(16.dp))
 
-                IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                    Icon(imageVector = image, contentDescription = if (passwordVisible) "Hide password" else "Show password")
+                Text(
+                    text = "     Teacher Sign Up ",
+                    fontSize = 28.sp,
+                    color = Color.Cyan,
+                    fontWeight = FontWeight.Medium,
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+
+                OutlinedTextField(
+                    value = email,
+                    onValueChange = { email = it },
+                    label = { Text(text = "Email") },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .width(100.dp),
+                    shape = RoundedCornerShape(20.dp),
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Next
+                    )
+                )
+
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                OutlinedTextField(
+                    value = password,
+                    onValueChange = { password = it },
+                    label = { Text(text = "Password") },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .width(100.dp),
+                    shape = RoundedCornerShape(20.dp),
+                    visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                    trailingIcon = {
+                        val image =
+                            if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
+
+                        IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                            Icon(
+                                imageVector = image,
+                                contentDescription = if (passwordVisible) "Hide password" else "Show password"
+                            )
+                        }
+                    },
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Done,
+                        keyboardType = KeyboardType.Password
+                    )
+
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+                Box (
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                Button(onClick = {
+                },
+                    colors = ButtonDefaults.buttonColors(Color.Cyan),
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    ) {
+                    Text(text = "Sign Up")
                 }
-            },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
-        )
+                }
+                Spacer(modifier = Modifier.height(8.dp))
 
+<<<<<<< HEAD
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(onClick = {
@@ -101,9 +197,22 @@ fun TeacherSignupScreen(navController: NavController, authViewModel: AuthViewMod
             navController.navigate("teacher_login") {
                 popUpTo("teacher_signup") { inclusive = true }
                 launchSingleTop = true
+=======
+                TextButton(onClick = {
+                    navController.navigate("teacher_login") {
+                        popUpTo("teacher_signup") { inclusive = true }
+                        launchSingleTop = true
+                    }
+                }) {
+                    Text(
+                        text = "           Already have an account? Login",
+                        color = Color.Cyan
+                    )
+                }
+>>>>>>> 8a21b599962d44d0800fab7b9e5ded4023913d73
             }
-        }) {
-            Text(text = "Already have an account? Login")
         }
     }
+
+}
 }

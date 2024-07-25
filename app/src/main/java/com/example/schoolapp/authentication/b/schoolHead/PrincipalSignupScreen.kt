@@ -1,116 +1,154 @@
-package com.example.schoolapp.com.example.schoolapp.authentication.loginScreen.schoolHead
+package com.example.schoolapp.authentication.b.schoolHead
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material3.Button
-import androidx.compose.material3.Icon
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.schoolapp.AuthState
-import com.example.schoolapp.AuthViewModel
+import com.example.schoolapp.R
 
 @Composable
-fun PrincipalSignupScreen(navController: NavController, authViewModel: AuthViewModel = viewModel()) {
-
+fun PrincipalSignupScreen(navController: NavController,) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
-    val authState by authViewModel.authState.observeAsState()
+    val context = LocalContext.current
 
-    LaunchedEffect(authState) {
-        when (authState) {
-            is AuthState.Authenticated -> {
-                navController.navigate("principal_home") {
-                    popUpTo("principal_signup") { inclusive = true }
-                }
-            }
-            is AuthState.Error -> {
-                // Show error message (e.g., using a Snackbar or Toast)
-                val errorMessage = (authState as AuthState.Error).message
-                // Handle the error display here
-            }
-            else -> {}
-        }
-    }
 
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Black)
+            .padding(16.dp)
     ) {
-        Text(text = "Sign Up Page", fontSize = 32.sp)
-        Spacer(modifier = Modifier.height(16.dp))
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                elevation = CardDefaults.cardElevation(4.dp),
+                colors = CardDefaults.cardColors(containerColor = Color.DarkGray)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.principal_login), // Replace with your image resource
+                        contentDescription = "Signup Image",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(200.dp) // Adjust height as needed
+                            .clip(MaterialTheme.shapes.medium)
+                            .offset(y = 100.dp)
 
-        OutlinedTextField(
-            value = email,
-            onValueChange = { email = it },
-            label = { Text(text = "Email") }
-        )
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
 
-        Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = "Principal Sign Up",
+                        fontSize = 32.sp,
+                        color = Color.Cyan,
+                        fontWeight = FontWeight.Medium,
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
 
-        OutlinedTextField(
-            value = password,
-            onValueChange = { password = it },
-            label = { Text(text = "Password") },
-            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-            trailingIcon = {
-                val image = if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
-                IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                    Icon(imageVector = image, contentDescription = if (passwordVisible) "Hide password" else "Show password")
+                    OutlinedTextField(
+                        value = email,
+                        onValueChange = { email = it },
+                        label = { Text(text = "Email") },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .width(100.dp),
+                        shape = RoundedCornerShape(20.dp),
+                        keyboardOptions = KeyboardOptions(
+                            imeAction = ImeAction.Next
+                        )
+                    )
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    OutlinedTextField(
+                        value = password,
+                        onValueChange = { password = it },
+                        label = { Text(text = "Password") },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .width(100.dp),
+                        shape = RoundedCornerShape(20.dp),
+                        visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                        trailingIcon = {
+                            val image = if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
+
+                            IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                                Icon(
+                                    imageVector = image,
+                                    contentDescription = if (passwordVisible) "Hide password" else "Show password"
+                                )
+                            }
+                        },
+                        keyboardOptions = KeyboardOptions(
+                            imeAction = ImeAction.Done,
+                            keyboardType = KeyboardType.Password
+                        )
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Button(
+                            onClick = {  },
+                            colors = ButtonDefaults.buttonColors(Color.Cyan),
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(text = "Sign Up")
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(8.dp))
+                    TextButton(onClick = {
+                        navController.navigate("principal_login") {
+                            popUpTo("principal_signup") { inclusive = true }
+                            launchSingleTop = true
+                        }
+                    }) {
+                        Text(
+                            text = "Already have an account? Login",
+                            color = Color.Cyan
+                        )
+                    }
                 }
-            },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Button(onClick = {
-            authViewModel.signup(email, password)
-        }) {
-            Text(text = "Sign Up")
-        }
-        Spacer(modifier = Modifier.height(8.dp))
-
-        TextButton(onClick = {
-            navController.navigate("principal_login") {
-                popUpTo("principal_signup") { inclusive = true }
-                launchSingleTop = true
             }
-        }) {
-            Text(text = "Already have an account? Login")
         }
     }
 }
-
-
-
-
-

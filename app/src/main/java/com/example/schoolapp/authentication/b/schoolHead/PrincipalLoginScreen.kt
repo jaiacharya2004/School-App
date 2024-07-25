@@ -1,6 +1,11 @@
-package com.example.schoolapp.com.example.schoolapp.authentication.loginScreen.schoolHead
+package com.example.schoolapp.authentication.b.schoolHead
 
+import android.content.Context
+import android.widget.Toast
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
@@ -10,7 +15,12 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -18,92 +28,131 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.schoolapp.AuthState
-import com.example.schoolapp.AuthViewModel
-import android.content.Context
-import android.widget.Toast
-
-
-
+import com.example.schoolapp.R
 
 @Composable
-fun PrincipalLoginScreen(navController: NavController, authViewModel: AuthViewModel = viewModel()) {
+fun PrincipalLoginScreen(navController: NavController,) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
-    val authState by authViewModel.authState.observeAsState()
     val context = LocalContext.current
 
-    LaunchedEffect(authState) {
-        when (authState) {
-            is AuthState.Authenticated -> {
-                navController.navigate("principal_home") {
-                    popUpTo("principal_login") { inclusive = true }
-                }
-            }
-            is AuthState.Error -> {
-                // Show the error message using Toast
-                val errorMessage = (authState as AuthState.Error).message
-                showToast(context, errorMessage)
-            }
-            else -> {}
-        }
-    }
 
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Black)
+            .padding(16.dp)
     ) {
-        Text(text = "Principal Login Screen", fontSize = 32.sp)
-        Spacer(modifier = Modifier.height(16.dp))
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                elevation = CardDefaults.cardElevation(4.dp),
+                colors = CardDefaults.cardColors(containerColor = Color.DarkGray)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.principal_login), // Replace with your image resource
+                        contentDescription = "Signup Image",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(200.dp) // Adjust height as needed
+                            .clip(MaterialTheme.shapes.medium)
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
 
-        OutlinedTextField(
-            value = email,
-            onValueChange = { email = it },
-            label = { Text(text = "Email") }
-        )
+                    Text(
+                        text = "     Principal Login",
+                        fontSize = 32.sp,
+                        color = Color.Cyan,
+                        fontWeight = FontWeight.Medium,
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
 
-        Spacer(modifier = Modifier.height(8.dp))
+                    OutlinedTextField(
+                        value = email,
+                        onValueChange = { email = it },
+                        label = { Text(text = "Email") },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .width(100.dp),
+                        shape = RoundedCornerShape(20.dp),
+                        keyboardOptions = KeyboardOptions(
+                            imeAction = ImeAction.Next
+                        )
+                    )
 
-        OutlinedTextField(
-            value = password,
-            onValueChange = { password = it },
-            label = { Text(text = "Password") },
-            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-            trailingIcon = {
-                val image = if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
+                    Spacer(modifier = Modifier.height(12.dp))
 
-                IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                    Icon(imageVector = image, contentDescription = if (passwordVisible) "Hide password" else "Show password")
+                    OutlinedTextField(
+                        value = password,
+                        onValueChange = { password = it },
+                        label = { Text(text = "Password") },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .width(100.dp),
+                        shape = RoundedCornerShape(20.dp),
+                        visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                        trailingIcon = {
+                            val image = if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
+
+                            IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                                Icon(
+                                    imageVector = image,
+                                    contentDescription = if (passwordVisible) "Hide password" else "Show password"
+                                )
+                            }
+                        },
+                        keyboardOptions = KeyboardOptions(
+                            imeAction = ImeAction.Done,
+                            keyboardType = KeyboardType.Password
+                        )
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Button(
+                            onClick = {  },
+                            colors = ButtonDefaults.buttonColors(Color.Cyan),
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(text = "Login")
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(8.dp))
+                    TextButton(onClick = {
+                        navController.navigate("principal_signup") {
+                            popUpTo("principal_login") { inclusive = true }
+                            launchSingleTop = true
+                        }
+                    }) {
+                        Text(
+                            text = "             Don't have an account? Sign Up",
+                            color = Color.Cyan
+                        )
+                    }
                 }
-            },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Button(onClick = {
-            authViewModel.login(email, password)
-        }) {
-            Text(text = "Login")
-        }
-        Spacer(modifier = Modifier.height(8.dp))
-
-        TextButton(onClick = {
-            navController.navigate("principal_signup") {
-                popUpTo("principal_login") { inclusive = true }
-                launchSingleTop = true
             }
-        }) {
-            Text(text = "Don't have an account? Sign Up")
         }
     }
 }
-
 
 fun showToast(context: Context, message: String) {
     Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
 }
-
-

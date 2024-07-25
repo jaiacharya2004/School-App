@@ -1,5 +1,5 @@
 // TeacherLoginScreen.kt
-package com.example.schoolapp.com.example.schoolapp.authentication.loginScreen.teacherauth
+package com.example.schoolapp.authentication.b.teacherauth
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
@@ -18,84 +18,147 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.schoolapp.AuthState
-import com.example.schoolapp.AuthViewModel
-import com.example.schoolapp.showToast
 import android.util.Log
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import com.example.schoolapp.R
 
 @Composable
-fun TeacherLoginScreen(navController: NavController, authViewModel: AuthViewModel = viewModel()) {
+fun TeacherLoginScreen(navController: NavController,) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
-    val authState by authViewModel.authState.observeAsState(AuthState.Unauthenticated)
     val context = LocalContext.current
 
-    LaunchedEffect(authState) {
-        when (authState) {
-            is AuthState.Authenticated -> {
-                Log.d("TeacherLoginScreen", "Authenticated")
-                navController.navigate("teacher_home") {
-                    popUpTo("teacher_login") { inclusive = true }
-                }
-            }
-            is AuthState.Error -> {
-                val errorMessage = (authState as AuthState.Error).message
-                Log.d("TeacherLoginScreen", "Error: $errorMessage")
-                showToast(context, errorMessage)
-            }
-            else -> {}
-        }
-    }
-
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Black)
+            .padding(16.dp)
+    ){
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = "Teacher Login Screen", fontSize = 32.sp)
-        Spacer(modifier = Modifier.height(16.dp))
+        Card (
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
 
-        OutlinedTextField(
-            value = email,
-            onValueChange = { email = it },
-            label = { Text(text = "Email") }
-        )
+            elevation = CardDefaults.cardElevation(4.dp),
+            colors = CardDefaults.cardColors(containerColor = Color.DarkGray),
 
-        Spacer(modifier = Modifier.height(8.dp))
 
-        OutlinedTextField(
-            value = password,
-            onValueChange = { password = it },
-            label = { Text(text = "Password") },
-            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-            trailingIcon = {
-                val image = if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
+            ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.teacher_signup_3), // Replace with your image resource
+                    contentDescription = "Signup Image",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(200.dp) // Adjust height as needed
+                        .clip(MaterialTheme.shapes.medium)
+                )
+                Spacer(modifier = Modifier.height(16.dp))
 
-                IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                    Icon(imageVector = image, contentDescription = if (passwordVisible) "Hide password" else "Show password")
+
+                Text(
+                    text = "     Teacher Login ",
+                    fontSize = 32.sp,
+                    color = Color.Cyan,
+                    fontWeight = FontWeight.Medium,
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+
+                OutlinedTextField(
+                    value = email,
+                    onValueChange = { email = it },
+                    label = { Text(text = "Email") },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .width(100.dp),
+                    shape = RoundedCornerShape(20.dp),
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Next
+                    )
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                OutlinedTextField(
+                    value = password,
+                    onValueChange = { password = it },
+                    label = { Text(text = "Password") },
+
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .width(100.dp),
+                    shape = RoundedCornerShape(20.dp),
+
+
+
+                    visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                    trailingIcon = {
+                        val image =
+                            if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
+
+                        IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                            Icon(
+                                imageVector = image,
+                                contentDescription = if (passwordVisible) "Hide password" else "Show password"
+                            )
+                        }
+                    },
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Done,
+                        keyboardType = KeyboardType.Password
+                    )
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Box (
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+
+                Button(onClick = {
+                },
+                    colors = ButtonDefaults.buttonColors(Color.Cyan),
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    ) {
+                    Text(text = "Login")
                 }
-            },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Button(onClick = {
-            authViewModel.login(email, password)
-        }) {
-            Text(text = "Login")
-        }
-        Spacer(modifier = Modifier.height(8.dp))
-
-        TextButton(onClick = {
-            navController.navigate("teacher_signup") {
-                popUpTo("teacher_login") { inclusive = true }
-                launchSingleTop = true
+                Spacer(modifier = Modifier.height(8.dp))
             }
-        }) {
-            Text(text = "Don't have an account? Sign Up")
-        }
+                TextButton(onClick = {
+                    navController.navigate("teacher_signup") {
+                        popUpTo("teacher_login") { inclusive = true }
+                        launchSingleTop = true
+                    }
+                }) {
+                    Text(
+                        text = "             Don't have an account? Sign Up",
+                        color = Color.Cyan
+                    )
+                }
+            }
     }
+    }
+}
 }
