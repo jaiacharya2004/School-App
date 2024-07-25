@@ -22,7 +22,16 @@ import com.example.schoolapp.AuthState
 import com.example.schoolapp.AuthViewModel
 import com.example.schoolapp.com.example.schoolapp.showToast
 import android.util.Log
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import com.example.schoolapp.R
 
 @Composable
 fun StudentLoginScreen(navController: NavController, authViewModel: AuthViewModel = viewModel()) {
@@ -49,53 +58,130 @@ fun StudentLoginScreen(navController: NavController, authViewModel: AuthViewMode
         }
     }
 
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(text = "Student Login Screen", fontSize = 32.sp)
-        Spacer(modifier = Modifier.height(16.dp))
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Black)
+            .padding(16.dp)
+    ){
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Card (
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
 
-        OutlinedTextField(
-            value = email,
-            onValueChange = { email = it },
-            label = { Text(text = "Email") }
-        )
+                elevation = CardDefaults.cardElevation(4.dp),
+                colors = CardDefaults.cardColors(containerColor = Color.DarkGray),
 
-        Spacer(modifier = Modifier.height(8.dp))
 
-        OutlinedTextField(
-            value = password,
-            onValueChange = { password = it },
-            label = { Text(text = "Password") },
-            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-            trailingIcon = {
-                val image = if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
+                ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.student_signup), // Replace with your image resource
+                        contentDescription = "Signup Image",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(200.dp) // Adjust height as needed
+                            .clip(MaterialTheme.shapes.medium)
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
 
-                IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                    Icon(imageVector = image, contentDescription = if (passwordVisible) "Hide password" else "Show password")
+
+                    Text(
+                        text = "     Student Login ",
+                        fontSize = 32.sp,
+                        color = Color.Cyan,
+                        fontWeight = FontWeight.Medium,
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    OutlinedTextField(
+                        value = email,
+                        onValueChange = { email = it },
+                        label = { Text(text = "Email") },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .width(100.dp),
+                        shape = RoundedCornerShape(20.dp),
+                        keyboardOptions = KeyboardOptions(
+                            imeAction = ImeAction.Next
+                        )
+                    )
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    OutlinedTextField(
+                        value = password,
+                        onValueChange = { password = it },
+                        label = { Text(text = "Password") },
+
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .width(100.dp),
+                        shape = RoundedCornerShape(20.dp),
+
+
+
+                        visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                        trailingIcon = {
+                            val image =
+                                if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
+
+                            IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                                Icon(
+                                    imageVector = image,
+                                    contentDescription = if (passwordVisible) "Hide password" else "Show password"
+                                )
+                            }
+                        },
+                        keyboardOptions = KeyboardOptions(
+                            imeAction = ImeAction.Done,
+                            keyboardType = KeyboardType.Password
+                        )
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Box (
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+
+                        Button(onClick = {
+                            authViewModel.login(email, password)
+                        },
+                            colors = ButtonDefaults.buttonColors(Color.Cyan),
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                        ) {
+                            Text(text = "Login")
+                        }
+                        Spacer(modifier = Modifier.height(8.dp))
+                    }
+                    TextButton(onClick = {
+                        navController.navigate("student_signup") {
+                            popUpTo("student_login") { inclusive = true }
+                            launchSingleTop = true
+                        }
+                    }) {
+                        Text(
+                            text = "             Don't have an account? Sign Up",
+                            color = Color.Cyan
+                        )
+                    }
                 }
-            },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Button(onClick = {
-            authViewModel.login(email, password)
-        }) {
-            Text(text = "Login")
-        }
-        Spacer(modifier = Modifier.height(8.dp))
-
-        TextButton(onClick = {
-            navController.navigate("student_signup") {
-                popUpTo("student_login") { inclusive = true }
-                launchSingleTop = true
             }
-        }) {
-            Text(text = "Don't have an account? Sign Up")
         }
     }
 }
+
