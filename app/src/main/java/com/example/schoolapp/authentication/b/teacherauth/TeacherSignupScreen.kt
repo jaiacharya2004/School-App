@@ -29,16 +29,17 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.schoolapp.AuthState
 import com.example.schoolapp.AuthViewModel
+import com.example.schoolapp.com.example.schoolapp.authentication.b.teacherauth.TeacherSignupViewModel
 import com.example.schoolapp.showToast
 
 @Composable
 fun TeacherSignupScreen(navController: NavController, authViewModel: AuthViewModel ) {
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+    var email = remember { mutableStateOf("") }
+    var password = remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
     val authState by authViewModel.authState.observeAsState(AuthState.Unauthenticated)
     val context = LocalContext.current
-
+    val teacherSignupViewModel=remember{TeacherSignupViewModel()}
     LaunchedEffect(authState) {
         when (authState) {
             is AuthState.Authenticated -> {
@@ -88,8 +89,10 @@ fun TeacherSignupScreen(navController: NavController, authViewModel: AuthViewMod
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(onClick = {
-            authViewModel.signup(email, password)
-        }) {
+            teacherSignupViewModel.performAuthAction(email.value,password.value)
+        }
+        )
+        {
             Text(text = "Sign Up")
         }
         Spacer(modifier = Modifier.height(8.dp))

@@ -20,13 +20,16 @@ import com.example.schoolapp.com.example.schoolapp.authentication.loginScreen.sc
 import com.example.schoolapp.com.example.schoolapp.authentication.loginScreen.studentauth.StudentSignupScreen
 import com.example.schoolapp.com.example.schoolapp.authentication.loginScreen.teacherauth.TeacherSignupScreen
 import com.example.schoolapp.ui.theme.SchoolAppTheme
+import com.google.firebase.auth.FirebaseAuth
 
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             SchoolAppTheme {
+
                 val navController = rememberNavController()
                 AppNavigation(navController)
             }
