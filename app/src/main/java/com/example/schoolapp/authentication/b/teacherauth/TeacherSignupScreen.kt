@@ -35,6 +35,17 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+<<<<<<< HEAD
+import com.example.schoolapp.AuthState
+import com.example.schoolapp.AuthViewModel
+import com.example.schoolapp.com.example.schoolapp.authentication.b.teacherauth.TeacherSignupViewModel
+import com.example.schoolapp.showToast
+
+@Composable
+fun TeacherSignupScreen(navController: NavController, authViewModel: AuthViewModel ) {
+    var email = remember { mutableStateOf("") }
+    var password = remember { mutableStateOf("") }
+=======
 
 import com.example.schoolapp.R
 
@@ -42,9 +53,28 @@ import com.example.schoolapp.R
 fun TeacherSignupScreen(navController: NavController, ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+>>>>>>> 8a21b599962d44d0800fab7b9e5ded4023913d73
     var passwordVisible by remember { mutableStateOf(false) }
     val context = LocalContext.current
+<<<<<<< HEAD
+    val teacherSignupViewModel=remember{TeacherSignupViewModel()}
+    LaunchedEffect(authState) {
+        when (authState) {
+            is AuthState.Authenticated -> {
+                navController.navigate("teacher_home") {
+                    popUpTo("teacher_signup") { inclusive = true }
+                }
+            }
+            is AuthState.Error -> {
+                val errorMessage = (authState as AuthState.Error).message
+                showToast(context, errorMessage)
+            }
+            else -> {}
+        }
+    }
+=======
 
+>>>>>>> 8a21b599962d44d0800fab7b9e5ded4023913d73
 
     Box(
         modifier = Modifier
@@ -151,6 +181,23 @@ fun TeacherSignupScreen(navController: NavController, ) {
                 }
                 Spacer(modifier = Modifier.height(8.dp))
 
+<<<<<<< HEAD
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Button(onClick = {
+            teacherSignupViewModel.performAuthAction(email.value,password.value)
+        }
+        )
+        {
+            Text(text = "Sign Up")
+        }
+        Spacer(modifier = Modifier.height(8.dp))
+
+        TextButton(onClick = {
+            navController.navigate("teacher_login") {
+                popUpTo("teacher_signup") { inclusive = true }
+                launchSingleTop = true
+=======
                 TextButton(onClick = {
                     navController.navigate("teacher_login") {
                         popUpTo("teacher_signup") { inclusive = true }
@@ -162,6 +209,7 @@ fun TeacherSignupScreen(navController: NavController, ) {
                         color = Color.Cyan
                     )
                 }
+>>>>>>> 8a21b599962d44d0800fab7b9e5ded4023913d73
             }
         }
     }
