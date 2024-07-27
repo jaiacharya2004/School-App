@@ -12,7 +12,7 @@ import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
+//import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,6 +36,7 @@ fun PrincipalLoginScreen(navController: NavController,) {
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
     val context = LocalContext.current
+    val viewModel =remember{ SchoolHeadLoginViewModel(navController)}
 
 
     Box(
@@ -128,7 +129,7 @@ fun PrincipalLoginScreen(navController: NavController,) {
                         contentAlignment = Alignment.Center
                     ) {
                         Button(
-                            onClick = {  },
+                            onClick = { viewModel.performAuthAction(email,password) },
                             colors = ButtonDefaults.buttonColors(Color.Cyan),
                             modifier = Modifier.fillMaxWidth()
                         ) {
@@ -143,7 +144,7 @@ fun PrincipalLoginScreen(navController: NavController,) {
                         }
                     }) {
                         Text(
-                            text = "             Don't have an account? Sign Up",
+                            text = " Don't have an account? Sign Up",
                             color = Color.Cyan
                         )
                     }

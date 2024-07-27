@@ -7,11 +7,11 @@ object FirebaseUtil {
     private val auth: FirebaseAuth by lazy { FirebaseAuth.getInstance() }
 
     private val fireStoreDb: FirebaseFirestore by lazy { FirebaseFirestore.getInstance() } // Lazy initialization
-    fun getAuth(): FirebaseAuth {
+    fun getAuthCustom(): FirebaseAuth {
         return auth
     }
 
-    fun getFireStoreDb():FirebaseFirestore{
+    fun getFireStoreDbCustom():FirebaseFirestore{
         return fireStoreDb
     }
 

@@ -1,19 +1,58 @@
-package com.example.schoolapp.com.example.schoolapp.authentication.b.teacherauth
+package com.example.schoolapp.authentication.b.teacherauth
 
-import com.example.schoolapp.com.example.schoolapp.authentication.b.BaseAuth.BaseAuthViewModel
+import android.util.Log
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavController
+import com.example.schoolapp.com.example.schoolapp.FirebaseUtil
 
-class TeacherLoginViewModel: BaseAuthViewModel( "Teacher") {
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
-    override fun validateUserInput(): Boolean {
-        // Implement validation checks specific to student login (e.g., student ID check)
-        return email.value.isNotBlank() && password.value.isNotBlank()
-    }
+class TeacherLoginViewModel(navController:NavController): ViewModel() {
 
-    override suspend fun performAuthAction(): Boolean {
-        // Implement student login logic using Firebase Authentication or other authentication methods
-        // ... (your implementation)
-        // Handle successful login and return true, or handle errors and return false
-        return false
+    private val auth = FirebaseUtil.getAuthCustom()
+    private val db = FirebaseUtil.getFireStoreDbCustom()
+
+
+    fun performAuthAction(email: String, password: String) {
+        val email = email
+        val password = password
+
+        viewModelScope.launch(Dispatchers.IO) {
+
+            try {
+
+                val teacherRef = db.collection("Teachers").whereEqualTo("Email", email)
+                Log.d("m0","database access")
+                val querySnapshot = teacherRef.get().await()
+                Log.d("m3","$querySnapshot")
+
+                if (querySnapshot.size()!=0) {
+                    // User exist login
+                    val authResult = auth.signInWithEmailAndPassword(email,password).await()
+val user = auth.currentUser
+                    Log.d("LOGIN", "User LoggedIn WITH user id ${user?.uid}")
+                //  navigate to teacher home screen
+                }
+                else {
+                    // User does not exists, handle error
+                    Log.d("m1","User does not exists, bad credentials permission denied")
+
+                }
+
+
+//
+
+
+
+            } catch (e: Exception) {
+                // Handle error
+            }
+
+
+        }
     }
 
 }

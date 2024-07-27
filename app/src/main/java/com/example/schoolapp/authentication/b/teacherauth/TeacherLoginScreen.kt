@@ -22,7 +22,6 @@ import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -36,6 +35,7 @@ fun TeacherLoginScreen(navController: NavController,) {
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
     val context = LocalContext.current
+val viewModel = TeacherLoginViewModel(navController)
 
     Box(
         modifier = Modifier
@@ -137,6 +137,7 @@ fun TeacherLoginScreen(navController: NavController,) {
                 ) {
 
                 Button(onClick = {
+viewModel.performAuthAction(email,password)
                 },
                     colors = ButtonDefaults.buttonColors(Color.Cyan),
                     modifier = Modifier

@@ -16,19 +16,16 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import com.example.schoolapp.R
-import com.example.schoolapp.com.example.schoolapp.authentication.b.studentauth.StudentSignupViewModel
 
 @Composable
 fun StudentLoginScreen(navController: NavController) {
@@ -36,7 +33,7 @@ fun StudentLoginScreen(navController: NavController) {
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
     val context = LocalContext.current
-
+val viewModel = StudentLoginViewModel(navController)
 
 
     Box(
@@ -139,7 +136,7 @@ fun StudentLoginScreen(navController: NavController) {
                     ) {
 
                         Button(onClick = {
-
+viewModel.performAuthAction(email,password)
                         },
                             colors = ButtonDefaults.buttonColors(Color.Cyan),
                             modifier = Modifier

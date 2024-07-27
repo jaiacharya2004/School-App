@@ -17,7 +17,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -35,17 +34,6 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-<<<<<<< HEAD
-import com.example.schoolapp.AuthState
-import com.example.schoolapp.AuthViewModel
-import com.example.schoolapp.com.example.schoolapp.authentication.b.teacherauth.TeacherSignupViewModel
-import com.example.schoolapp.showToast
-
-@Composable
-fun TeacherSignupScreen(navController: NavController, authViewModel: AuthViewModel ) {
-    var email = remember { mutableStateOf("") }
-    var password = remember { mutableStateOf("") }
-=======
 
 import com.example.schoolapp.R
 
@@ -53,28 +41,9 @@ import com.example.schoolapp.R
 fun TeacherSignupScreen(navController: NavController, ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
->>>>>>> 8a21b599962d44d0800fab7b9e5ded4023913d73
     var passwordVisible by remember { mutableStateOf(false) }
     val context = LocalContext.current
-<<<<<<< HEAD
-    val teacherSignupViewModel=remember{TeacherSignupViewModel()}
-    LaunchedEffect(authState) {
-        when (authState) {
-            is AuthState.Authenticated -> {
-                navController.navigate("teacher_home") {
-                    popUpTo("teacher_signup") { inclusive = true }
-                }
-            }
-            is AuthState.Error -> {
-                val errorMessage = (authState as AuthState.Error).message
-                showToast(context, errorMessage)
-            }
-            else -> {}
-        }
-    }
-=======
-
->>>>>>> 8a21b599962d44d0800fab7b9e5ded4023913d73
+    val viewModel = remember{TeacherSignupViewModel(navController)}
 
     Box(
         modifier = Modifier
@@ -82,137 +51,119 @@ fun TeacherSignupScreen(navController: NavController, ) {
             .background(Color.Black)
             .padding(16.dp)
     ){
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Card (
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-
-            elevation = CardDefaults.cardElevation(4.dp),
-            colors = CardDefaults.cardColors(containerColor = Color.DarkGray),
-
-
-            ) {
-            Column(
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Card (
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp)
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.teacher_signup_3), // Replace with your image resource
-                    contentDescription = "Signup Image",
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(200.dp) // Adjust height as needed
-                        .clip(MaterialTheme.shapes.medium)
-                )
-                Spacer(modifier = Modifier.height(16.dp))
+                    .padding(16.dp),
 
-                Text(
-                    text = "     Teacher Sign Up ",
-                    fontSize = 28.sp,
-                    color = Color.Cyan,
-                    fontWeight = FontWeight.Medium,
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-
-                OutlinedTextField(
-                    value = email,
-                    onValueChange = { email = it },
-                    label = { Text(text = "Email") },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .width(100.dp),
-                    shape = RoundedCornerShape(20.dp),
-                    keyboardOptions = KeyboardOptions(
-                        imeAction = ImeAction.Next
-                    )
-                )
+                elevation = CardDefaults.cardElevation(4.dp),
+                colors = CardDefaults.cardColors(containerColor = Color.DarkGray),
 
 
-                Spacer(modifier = Modifier.height(12.dp))
-
-                OutlinedTextField(
-                    value = password,
-                    onValueChange = { password = it },
-                    label = { Text(text = "Password") },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .width(100.dp),
-                    shape = RoundedCornerShape(20.dp),
-                    visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                    trailingIcon = {
-                        val image =
-                            if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
-
-                        IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                            Icon(
-                                imageVector = image,
-                                contentDescription = if (passwordVisible) "Hide password" else "Show password"
-                            )
-                        }
-                    },
-                    keyboardOptions = KeyboardOptions(
-                        imeAction = ImeAction.Done,
-                        keyboardType = KeyboardType.Password
-                    )
-
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-                Box (
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
-                    contentAlignment = Alignment.Center
                 ) {
-                Button(onClick = {
-                },
-                    colors = ButtonDefaults.buttonColors(Color.Cyan),
+                Column(
                     modifier = Modifier
-                        .fillMaxWidth(),
-                    ) {
-                    Text(text = "Sign Up")
-                }
-                }
-                Spacer(modifier = Modifier.height(8.dp))
-
-<<<<<<< HEAD
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Button(onClick = {
-            teacherSignupViewModel.performAuthAction(email.value,password.value)
-        }
-        )
-        {
-            Text(text = "Sign Up")
-        }
-        Spacer(modifier = Modifier.height(8.dp))
-
-        TextButton(onClick = {
-            navController.navigate("teacher_login") {
-                popUpTo("teacher_signup") { inclusive = true }
-                launchSingleTop = true
-=======
-                TextButton(onClick = {
-                    navController.navigate("teacher_login") {
-                        popUpTo("teacher_signup") { inclusive = true }
-                        launchSingleTop = true
-                    }
-                }) {
-                    Text(
-                        text = "           Already have an account? Login",
-                        color = Color.Cyan
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.teacher_signup_3), // Replace with your image resource
+                        contentDescription = "Signup Image",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(200.dp) // Adjust height as needed
+                            .clip(MaterialTheme.shapes.medium)
                     )
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Text(
+                        text = "     Teacher Sign Up ",
+                        fontSize = 28.sp,
+                        color = Color.Cyan,
+                        fontWeight = FontWeight.Medium,
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    OutlinedTextField(
+                        value = email,
+                        onValueChange = { email = it },
+                        label = { Text(text = "Email") },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .width(100.dp),
+                        shape = RoundedCornerShape(20.dp),
+                        keyboardOptions = KeyboardOptions(
+                            imeAction = ImeAction.Next
+                        )
+                    )
+
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    OutlinedTextField(
+                        value = password,
+                        onValueChange = { password = it },
+                        label = { Text(text = "Password") },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .width(100.dp),
+                        shape = RoundedCornerShape(20.dp),
+                        visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                        trailingIcon = {
+                            val image =
+                                if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
+
+                            IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                                Icon(
+                                    imageVector = image,
+                                    contentDescription = if (passwordVisible) "Hide password" else "Show password"
+                                )
+                            }
+                        },
+                        keyboardOptions = KeyboardOptions(
+                            imeAction = ImeAction.Done,
+                            keyboardType = KeyboardType.Password
+                        )
+
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Box (
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Button(onClick = {viewModel.performAuthAction(email,password)
+                        },
+                            colors = ButtonDefaults.buttonColors(Color.Cyan),
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                        ) {
+                            Text(text = "Sign Up")
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    TextButton(onClick = {
+                        navController.navigate("teacher_login") {
+                            popUpTo("teacher_signup") { inclusive = true }
+                            launchSingleTop = true
+                        }
+                    }) {
+                        Text(
+                            text = "           Already have an account? Login",
+                            color = Color.Cyan
+                        )
+                    }
                 }
->>>>>>> 8a21b599962d44d0800fab7b9e5ded4023913d73
             }
         }
-    }
 
-}
+    }
 }
