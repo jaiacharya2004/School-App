@@ -1,0 +1,8 @@
+
+ // For AppState
+    // Current User Logged In
+    // Current Screen
+    // Device Information -> To be later OS type Device Type and Screen Size
+    // User preferences -> Themes, Language and Notification Settings and other app settings
+    // Network Status -> Is UserOffline or IsOnline
+    // What to use for AppState file class or object
