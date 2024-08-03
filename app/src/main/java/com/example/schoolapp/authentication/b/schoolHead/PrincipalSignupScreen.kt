@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
@@ -13,7 +14,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -32,7 +37,11 @@ fun PrincipalSignupScreen(navController: NavController) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
-    val context = LocalContext.current
+
+    val focusManager = LocalFocusManager.current
+    val nameFocusRequester = remember { FocusRequester() }
+    val emailFocusRequester = remember { FocusRequester() }
+    val passwordFocusRequester = remember { FocusRequester() }
     val viewModel = remember { SchoolHeadSignupViewModel(navController) }
 
     Box(
@@ -82,10 +91,13 @@ fun PrincipalSignupScreen(navController: NavController) {
                         label = { Text(text = "Name") },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .width(100.dp),
+                            .focusRequester(nameFocusRequester),
                         shape = RoundedCornerShape(20.dp),
                         keyboardOptions = KeyboardOptions(
                             imeAction = ImeAction.Next
+                        ),
+                        keyboardActions = KeyboardActions(
+                            onNext = { emailFocusRequester.requestFocus() }
                         )
                     )
 
@@ -97,10 +109,13 @@ fun PrincipalSignupScreen(navController: NavController) {
                         label = { Text(text = "Email") },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .width(100.dp),
+                            .focusRequester(emailFocusRequester),
                         shape = RoundedCornerShape(20.dp),
                         keyboardOptions = KeyboardOptions(
                             imeAction = ImeAction.Next
+                        ),
+                        keyboardActions = KeyboardActions(
+                            onNext = { passwordFocusRequester.requestFocus() }
                         )
                     )
 
@@ -112,7 +127,7 @@ fun PrincipalSignupScreen(navController: NavController) {
                         label = { Text(text = "Password") },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .width(100.dp),
+                            .focusRequester(passwordFocusRequester),
                         shape = RoundedCornerShape(20.dp),
                         visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                         trailingIcon = {
@@ -128,6 +143,9 @@ fun PrincipalSignupScreen(navController: NavController) {
                         keyboardOptions = KeyboardOptions(
                             imeAction = ImeAction.Done,
                             keyboardType = KeyboardType.Password
+                        ),
+                        keyboardActions = KeyboardActions(
+                            onDone = { focusManager.clearFocus() }
                         )
                     )
 
@@ -140,7 +158,7 @@ fun PrincipalSignupScreen(navController: NavController) {
                         contentAlignment = Alignment.Center
                     ) {
                         Button(
-                            onClick = { viewModel.performAuthActionSignup(name, email, password) },
+                            onClick = { viewModel.performAuthAction(name, email, password) },
                             colors = ButtonDefaults.buttonColors(Color.Cyan),
                             modifier = Modifier.fillMaxWidth()
                         ) {

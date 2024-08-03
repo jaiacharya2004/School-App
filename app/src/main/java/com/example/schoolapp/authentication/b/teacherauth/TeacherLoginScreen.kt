@@ -1,6 +1,10 @@
 package com.example.schoolapp.authentication.b.teacherauth
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
@@ -9,7 +13,16 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -17,24 +30,22 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.ImeAction
 import com.example.schoolapp.R
 
 @Composable
-fun TeacherLoginScreen(navController: NavController,) {
+fun TeacherLoginScreen(navController: NavController) {
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
+
+    val nameFocusRequester = remember { FocusRequester() }
+    val emailFocusRequester = remember { FocusRequester() }
+    val passwordFocusRequester = remember { FocusRequester() }
+
     val context = LocalContext.current
-    val viewModel = TeacherLoginViewModel(navController)
+    val viewModel: TeacherLoginViewModel = viewModel() // Use viewModel() instead of manually creating
+    val focusManager = LocalFocusManager.current
 
     Box(
         modifier = Modifier
@@ -83,10 +94,13 @@ fun TeacherLoginScreen(navController: NavController,) {
                         label = { Text(text = "Name") },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .width(100.dp),
+                            .focusRequester(nameFocusRequester),
                         shape = RoundedCornerShape(20.dp),
                         keyboardOptions = KeyboardOptions(
                             imeAction = ImeAction.Next
+                        ),
+                        keyboardActions = KeyboardActions(
+                            onNext = { emailFocusRequester.requestFocus() }
                         )
                     )
 
@@ -98,10 +112,13 @@ fun TeacherLoginScreen(navController: NavController,) {
                         label = { Text(text = "Email") },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .width(100.dp),
+                            .focusRequester(emailFocusRequester),
                         shape = RoundedCornerShape(20.dp),
                         keyboardOptions = KeyboardOptions(
                             imeAction = ImeAction.Next
+                        ),
+                        keyboardActions = KeyboardActions(
+                            onNext = { passwordFocusRequester.requestFocus() }
                         )
                     )
 
@@ -113,7 +130,7 @@ fun TeacherLoginScreen(navController: NavController,) {
                         label = { Text(text = "Password") },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .width(100.dp),
+                            .focusRequester(passwordFocusRequester),
                         shape = RoundedCornerShape(20.dp),
                         visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                         trailingIcon = {
@@ -130,6 +147,9 @@ fun TeacherLoginScreen(navController: NavController,) {
                         keyboardOptions = KeyboardOptions(
                             imeAction = ImeAction.Done,
                             keyboardType = KeyboardType.Password
+                        ),
+                        keyboardActions = KeyboardActions(
+                            onDone = { focusManager.clearFocus() }
                         )
                     )
 
@@ -143,7 +163,7 @@ fun TeacherLoginScreen(navController: NavController,) {
                     ) {
                         Button(
                             onClick = {
-                                viewModel.performAuthAction(name , email, password)
+                                viewModel.performAuthAction(name, email, password)
                             },
                             colors = ButtonDefaults.buttonColors(Color.Cyan),
                             modifier = Modifier
@@ -165,8 +185,20 @@ fun TeacherLoginScreen(navController: NavController,) {
                             color = Color.Cyan
                         )
                     }
+                    TextButton(onClick = {
+                        navController.navigate("teacher_forgot_password") {
+                            popUpTo("teacher_login") { inclusive = true }
+                            launchSingleTop = true
+                        }
+                    }) {
+                        Text(
+                            text = "Forgot Password?",
+                            color = Color.Cyan
+                        )
+                    }
+                }
                 }
             }
         }
     }
-}
+

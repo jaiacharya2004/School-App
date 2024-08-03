@@ -13,6 +13,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -23,17 +25,22 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.schoolapp.R
 
+
 @Composable
 fun TeacherSignupScreen(navController: NavController) {
+    val viewModel: TeacherSignupViewModel = viewModel()
+    val nameFocusRequester = remember { FocusRequester() }
+    val emailFocusRequester = remember { FocusRequester() }
+    val passwordFocusRequester = remember { FocusRequester() }
+
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
-    val context = LocalContext.current
-    val viewModel = remember { TeacherSignupViewModel(navController) }
 
     Box(
         modifier = Modifier
@@ -51,38 +58,20 @@ fun TeacherSignupScreen(navController: NavController) {
                     .fillMaxWidth()
                     .padding(16.dp),
                 elevation = CardDefaults.cardElevation(4.dp),
-                colors = CardDefaults.cardColors(containerColor = Color.DarkGray),
+                colors = CardDefaults.cardColors(containerColor = Color.DarkGray)
             ) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(16.dp)
                 ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.teacher_signup_3), // Replace with your image resource
-                        contentDescription = "Signup Image",
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(200.dp) // Adjust height as needed
-                            .clip(MaterialTheme.shapes.medium)
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    Text(
-                        text = "     Teacher Sign Up ",
-                        fontSize = 28.sp,
-                        color = Color.Cyan,
-                        fontWeight = FontWeight.Medium,
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-
                     OutlinedTextField(
                         value = name,
                         onValueChange = { name = it },
                         label = { Text(text = "Name") },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .width(100.dp),
+                            .focusRequester(nameFocusRequester), // Request focus here
                         shape = RoundedCornerShape(20.dp),
                         keyboardOptions = KeyboardOptions(
                             imeAction = ImeAction.Next
@@ -97,7 +86,7 @@ fun TeacherSignupScreen(navController: NavController) {
                         label = { Text(text = "Email") },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .width(100.dp),
+                            .focusRequester(emailFocusRequester), // Request focus here
                         shape = RoundedCornerShape(20.dp),
                         keyboardOptions = KeyboardOptions(
                             imeAction = ImeAction.Next
@@ -112,7 +101,7 @@ fun TeacherSignupScreen(navController: NavController) {
                         label = { Text(text = "Password") },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .width(100.dp),
+                            .focusRequester(passwordFocusRequester), // Request focus here
                         shape = RoundedCornerShape(20.dp),
                         visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                         trailingIcon = {
@@ -120,10 +109,7 @@ fun TeacherSignupScreen(navController: NavController) {
                                 if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
 
                             IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                                Icon(
-                                    imageVector = image,
-                                    contentDescription = if (passwordVisible) "Hide password" else "Show password"
-                                )
+                                Icon(imageVector = image, contentDescription = if (passwordVisible) "Hide password" else "Show password")
                             }
                         },
                         keyboardOptions = KeyboardOptions(
@@ -140,7 +126,9 @@ fun TeacherSignupScreen(navController: NavController) {
                         contentAlignment = Alignment.Center
                     ) {
                         Button(
-                            onClick = { viewModel.performAuthAction(name,email, password) },
+                            onClick = {
+                                viewModel.performAuthAction(name, email, password)
+                            },
                             colors = ButtonDefaults.buttonColors(Color.Cyan),
                             modifier = Modifier
                                 .fillMaxWidth(),
@@ -157,7 +145,7 @@ fun TeacherSignupScreen(navController: NavController) {
                         }
                     }) {
                         Text(
-                            text = "           Already have an account? Login",
+                            text = " Already have an account? Login",
                             color = Color.Cyan
                         )
                     }

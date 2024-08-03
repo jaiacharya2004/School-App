@@ -15,60 +15,65 @@ class SchoolHeadSignupViewModel(private val navController: NavController):ViewMo
 
         private val auth = FirebaseUtil.getAuthCustom()
         private val db = FirebaseUtil.getFireStoreDbCustom()
+    fun performAuthAction(name: String, email: String, password: String) {
+        val name = name
+        val email = email
+        val password = password
 
-    fun performAuthActionSignup(email: String, password: String, name: String) {
-            val name = name
-            val email = email
-            val password = password
+        viewModelScope.launch(Dispatchers.IO) {
 
-            viewModelScope.launch(Dispatchers.IO) {
-
-                try {
-                    val schoolHeadRef = db.collection("Schools").whereEqualTo("Email", email)
-                    Log.d("m0","database access")
-                    val querySnapshot = schoolHeadRef.get().await()
-                    Log.d("m1","$querySnapshot")
-                    if (querySnapshot.isEmpty) {
-                        // User doesn't exist, create a new user
-                        val authResult = auth.createUserWithEmailAndPassword(email, password).await()
-                        val schoolId = authResult.user?.uid
-
-
-                        val schoolData = hashMapOf(
-                            "Email" to email,
-                        )
-                        if (schoolId != null) {
-                            db.collection("Schools").document(schoolId).set(schoolData)
-
-                                .addOnSuccessListener {
-                                    // Teacher created successfully
-                                    navController.navigate("principal_home")
-                                }
-                                .addOnFailureListener {
-                                    // Handle error
-
-                                }
+            try {
+                val schoolHeadRef = db.collection("Schools").whereEqualTo("Email", email)
+                Log.d("m0","database access")
+                val querySnapshot = schoolHeadRef.get().await()
+                Log.d("m1","$querySnapshot")
+                if (querySnapshot.isEmpty) {
+                    // User doesn't exist, create a new user
+                    val authResult = auth.createUserWithEmailAndPassword(email, password).await()
+                    val schoolId = authResult.user?.uid
 
 
-                        } else {
-                            // teacherid is null
+                    val schoolData = hashMapOf(
+                        "Email" to email,
+                    )
+                    if (schoolId != null) {
+                        db.collection("Schools").document(schoolId).set(schoolData)
 
-                        }
+                            .addOnSuccessListener {
+                                // Teacher created successfully
+                                navController.navigate("principal_home")
+                            }
+                            .addOnFailureListener {
+                                // Handle error
+
+                            }
+
+
                     } else {
-                        // User already exists, handle error
-                        Log.d("m2","User exists")
+                        // teacherid is null
 
                     }
+                } else {
+                    // User already exists, handle error
+                    Log.d("m2","User exists")
 
-                } catch (e: Exception) {
-                    // Handle error
                 }
 
-
+            } catch (e: Exception) {
+                // Handle error
             }
+
+
         }
 
     }
+
+    fun sendPasswordResetEmail(email: String) {
+            TODO("Not yet implemented")
+    }
+
+
+}
 
 
 
