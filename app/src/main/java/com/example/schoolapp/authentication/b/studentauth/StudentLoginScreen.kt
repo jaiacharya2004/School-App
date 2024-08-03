@@ -27,11 +27,16 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.schoolapp.R
+import com.example.schoolapp.errorMessages.authenticationErrorMessages.ErrorHandler
+import com.example.schoolapp.errorMessages.authenticationErrorMessages.ErrorState
+import com.example.schoolapp.errorMessages.authenticationErrorMessages.ErrorViewModel
 
 @Composable
 fun StudentLoginScreen(navController: NavController) {
+    val errorViewModel: ErrorViewModel = viewModel()
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -162,8 +167,16 @@ fun StudentLoginScreen(navController: NavController) {
                     ) {
                         Button(
                             onClick = {
-                                viewModel.performAuthAction(name, email, password)
-                            },
+
+                                    // Handle login action
+                                    when {
+                                        email.isEmpty() -> errorViewModel.handleError(ErrorState.ValidationError("Email cannot be empty"))
+                                        password.isEmpty() -> errorViewModel.handleError(ErrorState.ValidationError("Password cannot be empty"))
+                                        else -> {
+                                            // Perform login
+                                        }
+                                    }
+                                },
                             colors = ButtonDefaults.buttonColors(Color.Cyan),
                             modifier = Modifier
                                 .fillMaxWidth(),
@@ -199,5 +212,9 @@ fun StudentLoginScreen(navController: NavController) {
                 }
             }
         }
+    ErrorHandler(
+        errorState = errorViewModel.errorState.value,
+        onDismiss = { errorViewModel.clearError() }
+    )
     }
 

@@ -28,10 +28,14 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.schoolapp.R
+import com.example.schoolapp.errorMessages.authenticationErrorMessages.ErrorHandler
+import com.example.schoolapp.errorMessages.authenticationErrorMessages.ErrorState
+import com.example.schoolapp.errorMessages.authenticationErrorMessages.ErrorViewModel
 
 
 @Composable
 fun TeacherSignupScreen(navController: NavController) {
+    val errorViewModel: ErrorViewModel = viewModel()
     val viewModel: TeacherSignupViewModel = viewModel()
     val nameFocusRequester = remember { FocusRequester() }
     val emailFocusRequester = remember { FocusRequester() }
@@ -127,7 +131,14 @@ fun TeacherSignupScreen(navController: NavController) {
                     ) {
                         Button(
                             onClick = {
-                                viewModel.performAuthAction(name, email, password)
+                                // Handle login action
+                                when {
+                                    email.isEmpty() -> errorViewModel.handleError(ErrorState.ValidationError("Email cannot be empty"))
+                                    password.isEmpty() -> errorViewModel.handleError(ErrorState.ValidationError("Password cannot be empty"))
+                                    else -> {
+                                        // Perform login
+                                    }
+                                }
                             },
                             colors = ButtonDefaults.buttonColors(Color.Cyan),
                             modifier = Modifier
@@ -153,4 +164,8 @@ fun TeacherSignupScreen(navController: NavController) {
             }
         }
     }
+    ErrorHandler(
+        errorState = errorViewModel.errorState.value,
+        onDismiss = { errorViewModel.clearError() }
+    )
 }

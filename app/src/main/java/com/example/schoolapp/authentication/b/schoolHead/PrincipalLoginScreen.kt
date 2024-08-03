@@ -28,9 +28,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.schoolapp.R
+import com.example.schoolapp.errorMessages.authenticationErrorMessages.ErrorState
+import com.example.schoolapp.errorMessages.authenticationErrorMessages.ErrorViewModel
+import com.example.schoolapp.errorMessages.authenticationErrorMessages.ErrorHandler
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
 fun PrincipalLoginScreen(navController: NavController) {
+    val errorViewModel: ErrorViewModel = viewModel()
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -65,11 +70,11 @@ fun PrincipalLoginScreen(navController: NavController) {
                         .padding(16.dp)
                 ) {
                     Image(
-                        painter = painterResource(id = R.drawable.principal_login), // Replace with your image resource
-                        contentDescription = "Signup Image",
+                        painter = painterResource(id = R.drawable.principal_login),
+                        contentDescription = "Login Image",
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(200.dp) // Adjust height as needed
+                            .height(200.dp)
                             .clip(MaterialTheme.shapes.medium)
                     )
                     Spacer(modifier = Modifier.height(16.dp))
@@ -147,7 +152,16 @@ fun PrincipalLoginScreen(navController: NavController) {
                     Spacer(modifier = Modifier.height(16.dp))
 
                     Button(
-                        onClick = { /* Handle login action */ },
+                        onClick = {
+                            // Handle login action
+                            when {
+                                email.isEmpty() -> errorViewModel.handleError(ErrorState.ValidationError("Email cannot be empty"))
+                                password.isEmpty() -> errorViewModel.handleError(ErrorState.ValidationError("Password cannot be empty"))
+                                else -> {
+                                    // Perform login
+                                }
+                            }
+                        },
                         colors = ButtonDefaults.buttonColors(Color.Cyan),
                         modifier = Modifier.fillMaxWidth()
                     ) {
@@ -182,4 +196,11 @@ fun PrincipalLoginScreen(navController: NavController) {
             }
         }
     }
+
+    // Display the error message
+    ErrorHandler(
+        errorState = errorViewModel.errorState.value,
+        onDismiss = { errorViewModel.clearError() }
+    )
 }
+
