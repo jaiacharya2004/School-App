@@ -30,7 +30,11 @@ fun ForgotPasswordScreen(navController: NavController, role: String) {
         Spacer(modifier = Modifier.height(16.dp))
         Button(
             onClick = {
-                // Handle password reset based on role
+                // Navigate to EnterVerificationCodeScreen
+                navController.navigate("enter_verification_code") {
+                    // Pass role as an argument if needed
+                    launchSingleTop = true
+                }
             },
             modifier = Modifier.fillMaxWidth()
         ) {

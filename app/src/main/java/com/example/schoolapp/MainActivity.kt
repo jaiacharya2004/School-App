@@ -8,7 +8,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.schoolapp.authentication.b.common.EnterVerificationCodeScreen
 import com.example.schoolapp.authentication.b.common.ForgotPasswordScreen
+import com.example.schoolapp.authentication.b.common.ResetPasswordScreen
 import com.example.schoolapp.authentication.b.schoolHead.PrincipalHomeScreen
 import com.example.schoolapp.authentication.b.schoolHead.PrincipalLoginScreen
 import com.example.schoolapp.authentication.b.schoolHead.PrincipalSignupScreen
@@ -54,5 +56,9 @@ fun AppNavigation(navController: NavHostController) {
         composable("student_forgot_password") {
             ForgotPasswordScreen(navController, role = "Student")
         }
+
+        composable("forgot_password_screen") { ForgotPasswordScreen(navController, "Role") }
+        composable("enter_verification_code") { EnterVerificationCodeScreen(navController, "Role") }
+        composable("reset_password") { ResetPasswordScreen(navController, "Role") }
     }
 }
