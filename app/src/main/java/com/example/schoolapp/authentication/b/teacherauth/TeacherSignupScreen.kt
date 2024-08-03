@@ -4,22 +4,12 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -34,38 +24,35 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-
 import com.example.schoolapp.R
 
 @Composable
-fun TeacherSignupScreen(navController: NavController, ) {
+fun TeacherSignupScreen(navController: NavController) {
+    var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
     val context = LocalContext.current
-    val viewModel = remember{TeacherSignupViewModel(navController)}
+    val viewModel = remember { TeacherSignupViewModel(navController) }
 
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.Black)
             .padding(16.dp)
-    ){
+    ) {
         Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Card (
+            Card(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp),
-
                 elevation = CardDefaults.cardElevation(4.dp),
                 colors = CardDefaults.cardColors(containerColor = Color.DarkGray),
-
-
-                ) {
+            ) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -90,6 +77,21 @@ fun TeacherSignupScreen(navController: NavController, ) {
                     Spacer(modifier = Modifier.height(16.dp))
 
                     OutlinedTextField(
+                        value = name,
+                        onValueChange = { name = it },
+                        label = { Text(text = "Name") },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .width(100.dp),
+                        shape = RoundedCornerShape(20.dp),
+                        keyboardOptions = KeyboardOptions(
+                            imeAction = ImeAction.Next
+                        )
+                    )
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    OutlinedTextField(
                         value = email,
                         onValueChange = { email = it },
                         label = { Text(text = "Email") },
@@ -101,7 +103,6 @@ fun TeacherSignupScreen(navController: NavController, ) {
                             imeAction = ImeAction.Next
                         )
                     )
-
 
                     Spacer(modifier = Modifier.height(12.dp))
 
@@ -129,18 +130,17 @@ fun TeacherSignupScreen(navController: NavController, ) {
                             imeAction = ImeAction.Done,
                             keyboardType = KeyboardType.Password
                         )
-
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
-                    Box (
+                    Box(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp),
                         contentAlignment = Alignment.Center
                     ) {
-                        Button(onClick = {viewModel.performAuthAction(email,password)
-                        },
+                        Button(
+                            onClick = { viewModel.performAuthAction(name,email, password) },
                             colors = ButtonDefaults.buttonColors(Color.Cyan),
                             modifier = Modifier
                                 .fillMaxWidth(),
@@ -164,6 +164,5 @@ fun TeacherSignupScreen(navController: NavController, ) {
                 }
             }
         }
-
     }
 }

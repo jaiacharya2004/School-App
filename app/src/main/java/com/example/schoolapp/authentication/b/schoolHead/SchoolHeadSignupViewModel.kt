@@ -16,7 +16,8 @@ class SchoolHeadSignupViewModel(private val navController: NavController):ViewMo
         private val auth = FirebaseUtil.getAuthCustom()
         private val db = FirebaseUtil.getFireStoreDbCustom()
 
-    fun performAuthActionSignup(email: String, password: String) {
+    fun performAuthActionSignup(email: String, password: String, name: String) {
+            val name = name
             val email = email
             val password = password
 

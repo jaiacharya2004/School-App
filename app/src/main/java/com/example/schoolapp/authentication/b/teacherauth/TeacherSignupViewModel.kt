@@ -19,7 +19,8 @@ import kotlinx.coroutines.tasks.await
 //
 //    }
 
-     fun performAuthAction(email: String, password: String) {
+     fun performAuthAction(name : String, email: String, password: String) {
+         val name = name
          val email = email
          val password = password
 
@@ -37,6 +38,7 @@ import kotlinx.coroutines.tasks.await
 
 
                      val teacherData = hashMapOf(
+                         "Name" to name,
                          "Email" to email,
 
 

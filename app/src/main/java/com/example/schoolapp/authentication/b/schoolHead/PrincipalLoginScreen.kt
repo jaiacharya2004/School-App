@@ -12,7 +12,6 @@ import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-//import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -26,18 +25,17 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.schoolapp.R
 
 @Composable
-fun PrincipalLoginScreen(navController: NavController,) {
+fun PrincipalLoginScreen(navController: NavController) {
+    var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
     val context = LocalContext.current
-    val viewModel =remember{ SchoolHeadLoginViewModel(navController)}
-
+    val viewModel = remember { SchoolHeadSignupViewModel(navController) }
 
     Box(
         modifier = Modifier
@@ -64,7 +62,7 @@ fun PrincipalLoginScreen(navController: NavController,) {
                 ) {
                     Image(
                         painter = painterResource(id = R.drawable.principal_login), // Replace with your image resource
-                        contentDescription = "Signup Image",
+                        contentDescription = "Login Image",
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(200.dp) // Adjust height as needed
@@ -79,6 +77,21 @@ fun PrincipalLoginScreen(navController: NavController,) {
                         fontWeight = FontWeight.Medium,
                     )
                     Spacer(modifier = Modifier.height(16.dp))
+
+                    OutlinedTextField(
+                        value = name,
+                        onValueChange = { name = it },
+                        label = { Text(text = "Name") },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .width(100.dp),
+                        shape = RoundedCornerShape(20.dp),
+                        keyboardOptions = KeyboardOptions(
+                            imeAction = ImeAction.Next
+                        )
+                    )
+
+                    Spacer(modifier = Modifier.height(12.dp))
 
                     OutlinedTextField(
                         value = email,
@@ -129,7 +142,7 @@ fun PrincipalLoginScreen(navController: NavController,) {
                         contentAlignment = Alignment.Center
                     ) {
                         Button(
-                            onClick = { viewModel.performAuthAction(email,password) },
+                            onClick = { viewModel.performAuthActionSignup(name, email, password) },
                             colors = ButtonDefaults.buttonColors(Color.Cyan),
                             modifier = Modifier.fillMaxWidth()
                         ) {
@@ -144,7 +157,7 @@ fun PrincipalLoginScreen(navController: NavController,) {
                         }
                     }) {
                         Text(
-                            text = " Don't have an account? Sign Up",
+                            text = "Already have an account? Login",
                             color = Color.Cyan
                         )
                     }

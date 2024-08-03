@@ -27,12 +27,13 @@ import androidx.navigation.NavController
 import com.example.schoolapp.R
 
 @Composable
-fun StudentSignupScreen(navController: NavController,) {
+fun StudentSignupScreen(navController: NavController) {
+    var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
     val context = LocalContext.current
-    val viewModel = remember{ StudentSignupViewModel(navController) }
+    val viewModel = remember { StudentSignupViewModel(navController) }
 
     Box(
         modifier = Modifier
@@ -74,6 +75,21 @@ fun StudentSignupScreen(navController: NavController,) {
                         fontWeight = FontWeight.Medium,
                     )
                     Spacer(modifier = Modifier.height(16.dp))
+
+                    OutlinedTextField(
+                        value = name,
+                        onValueChange = { name = it },
+                        label = { Text(text = "Name") },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .width(100.dp),
+                        shape = RoundedCornerShape(20.dp),
+                        keyboardOptions = KeyboardOptions(
+                            imeAction = ImeAction.Next
+                        )
+                    )
+
+                    Spacer(modifier = Modifier.height(12.dp))
 
                     OutlinedTextField(
                         value = email,
@@ -124,7 +140,7 @@ fun StudentSignupScreen(navController: NavController,) {
                         contentAlignment = Alignment.Center
                     ) {
                         Button(
-                            onClick = { viewModel.performAuthActionSignup(email,password) },
+                            onClick = { viewModel.performAuthActionSignup(name, email, password) },
                             colors = ButtonDefaults.buttonColors(Color.Cyan),
                             modifier = Modifier.fillMaxWidth()
                         ) {

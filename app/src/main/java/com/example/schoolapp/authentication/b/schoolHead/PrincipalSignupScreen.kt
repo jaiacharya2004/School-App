@@ -27,13 +27,13 @@ import androidx.navigation.NavController
 import com.example.schoolapp.R
 
 @Composable
-fun PrincipalSignupScreen(navController: NavController,) {
+fun PrincipalSignupScreen(navController: NavController) {
+    var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
     val context = LocalContext.current
-    val viewModel = remember{ SchoolHeadSignupViewModel(navController) }
-
+    val viewModel = remember { SchoolHeadSignupViewModel(navController) }
 
     Box(
         modifier = Modifier
@@ -65,18 +65,31 @@ fun PrincipalSignupScreen(navController: NavController,) {
                             .fillMaxWidth()
                             .height(200.dp) // Adjust height as needed
                             .clip(MaterialTheme.shapes.medium)
-                            .offset(y = 100.dp)
-
                     )
                     Spacer(modifier = Modifier.height(16.dp))
 
                     Text(
-                        text = "Principal Sign Up",
+                        text = "   Principal Sign Up",
                         fontSize = 32.sp,
                         color = Color.Cyan,
                         fontWeight = FontWeight.Medium,
                     )
                     Spacer(modifier = Modifier.height(16.dp))
+
+                    OutlinedTextField(
+                        value = name,
+                        onValueChange = { name = it },
+                        label = { Text(text = "Name") },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .width(100.dp),
+                        shape = RoundedCornerShape(20.dp),
+                        keyboardOptions = KeyboardOptions(
+                            imeAction = ImeAction.Next
+                        )
+                    )
+
+                    Spacer(modifier = Modifier.height(12.dp))
 
                     OutlinedTextField(
                         value = email,
@@ -127,7 +140,7 @@ fun PrincipalSignupScreen(navController: NavController,) {
                         contentAlignment = Alignment.Center
                     ) {
                         Button(
-                            onClick = {  viewModel.performAuthActionSignup(email,password)},
+                            onClick = { viewModel.performAuthActionSignup(name, email, password) },
                             colors = ButtonDefaults.buttonColors(Color.Cyan),
                             modifier = Modifier.fillMaxWidth()
                         ) {

@@ -17,6 +17,7 @@ import com.example.schoolapp.authentication.b.teacherauth.TeacherHomeScreen
 import com.example.schoolapp.authentication.b.schoolHead.PrincipalLoginScreen
 import com.example.schoolapp.authentication.b.studentauth.StudentLoginScreen
 import com.example.schoolapp.authentication.b.schoolHead.PrincipalSignupScreen
+import com.example.schoolapp.authentication.b.schoolHead.principalforgetpassword.ResetPasswordScreen
 import com.example.schoolapp.authentication.b.studentauth.StudentSignupScreen
 import com.example.schoolapp.authentication.b.teacherauth.TeacherLoginScreen
 import com.example.schoolapp.authentication.b.teacherauth.TeacherSignupScreen
@@ -33,22 +34,19 @@ class MainActivity : ComponentActivity() {
             SchoolAppTheme {
 
                 val navController = rememberNavController()
-//               TeacherSignupScreen(navController)
-            AppNavigation(navController)
+                AppNavigation(navController)
             }
-
         }
     }
 }
 
 @Composable
 fun AppNavigation(navController: NavHostController) {
-
-
     NavHost(navController = navController, startDestination = "role_selection_screen") {
         composable("role_selection_screen") { RoleSelectionScreen(navController) }
         composable("principal_home") { PrincipalHomeScreen(navController) }
         composable("principal_login") { PrincipalLoginScreen(navController) }
+        composable("principal_forget_password") { ResetPasswordScreen(navController) }
         composable("principal_signup") { PrincipalSignupScreen(navController) }
         composable("teacher_home") { TeacherHomeScreen(navController) }
         composable("teacher_login") { TeacherLoginScreen(navController) }
