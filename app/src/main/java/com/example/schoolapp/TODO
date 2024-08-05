@@ -6,3 +6,10 @@
     // User preferences -> Themes, Language and Notification Settings and other app settings
     // Network Status -> Is UserOffline or IsOnline
     // What to use for AppState file class or object
+    // Debugging and Testing strategy for the app -> JUnit and Espresso
+    // Firestore Firebase Authentication
+
+
+    // School Head Signup Empty text field messages
+     // Empty fields and incorrect formats
+     // Implementing Focus Manager in All auth Screens for outlined text fields
