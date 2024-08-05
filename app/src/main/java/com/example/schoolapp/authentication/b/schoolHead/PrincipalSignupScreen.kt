@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
@@ -13,7 +14,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -23,17 +28,27 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.schoolapp.R
+import com.example.schoolapp.errorMessages.authenticationErrorMessages.ErrorHandler
+import com.example.schoolapp.errorMessages.authenticationErrorMessages.ErrorState
+import com.example.schoolapp.errorMessages.authenticationErrorMessages.ErrorViewModel
+
 
 @Composable
-fun PrincipalSignupScreen(navController: NavController,) {
+fun PrincipalSignupScreen(navController: NavController) {
+    val errorViewModel: ErrorViewModel = viewModel()
+    var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
-    val context = LocalContext.current
-    val viewModel = remember{ SchoolHeadSignupViewModel(navController) }
 
+    val focusManager = LocalFocusManager.current
+    val nameFocusRequester = remember { FocusRequester() }
+    val emailFocusRequester = remember { FocusRequester() }
+    val passwordFocusRequester = remember { FocusRequester() }
+    val viewModel = remember { SchoolHeadSignupViewModel(navController) }
 
     Box(
         modifier = Modifier
@@ -65,13 +80,11 @@ fun PrincipalSignupScreen(navController: NavController,) {
                             .fillMaxWidth()
                             .height(200.dp) // Adjust height as needed
                             .clip(MaterialTheme.shapes.medium)
-                            .offset(y = 100.dp)
-
                     )
                     Spacer(modifier = Modifier.height(16.dp))
 
                     Text(
-                        text = "Principal Sign Up",
+                        text = "   Principal Sign Up",
                         fontSize = 32.sp,
                         color = Color.Cyan,
                         fontWeight = FontWeight.Medium,
@@ -79,15 +92,36 @@ fun PrincipalSignupScreen(navController: NavController,) {
                     Spacer(modifier = Modifier.height(16.dp))
 
                     OutlinedTextField(
+                        value = name,
+                        onValueChange = { name = it },
+                        label = { Text(text = "Name") },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .focusRequester(nameFocusRequester),
+                        shape = RoundedCornerShape(20.dp),
+                        keyboardOptions = KeyboardOptions(
+                            imeAction = ImeAction.Next
+                        ),
+                        keyboardActions = KeyboardActions(
+                            onNext = { emailFocusRequester.requestFocus() }
+                        )
+                    )
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    OutlinedTextField(
                         value = email,
                         onValueChange = { email = it },
                         label = { Text(text = "Email") },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .width(100.dp),
+                            .focusRequester(emailFocusRequester),
                         shape = RoundedCornerShape(20.dp),
                         keyboardOptions = KeyboardOptions(
                             imeAction = ImeAction.Next
+                        ),
+                        keyboardActions = KeyboardActions(
+                            onNext = { passwordFocusRequester.requestFocus() }
                         )
                     )
 
@@ -99,7 +133,7 @@ fun PrincipalSignupScreen(navController: NavController,) {
                         label = { Text(text = "Password") },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .width(100.dp),
+                            .focusRequester(passwordFocusRequester),
                         shape = RoundedCornerShape(20.dp),
                         visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                         trailingIcon = {
@@ -115,6 +149,9 @@ fun PrincipalSignupScreen(navController: NavController,) {
                         keyboardOptions = KeyboardOptions(
                             imeAction = ImeAction.Done,
                             keyboardType = KeyboardType.Password
+                        ),
+                        keyboardActions = KeyboardActions(
+                            onDone = { focusManager.clearFocus() }
                         )
                     )
 
@@ -127,8 +164,16 @@ fun PrincipalSignupScreen(navController: NavController,) {
                         contentAlignment = Alignment.Center
                     ) {
                         Button(
-                            onClick = {  viewModel.performAuthActionSignup(email,password)},
-                            colors = ButtonDefaults.buttonColors(Color.Cyan),
+                            onClick = {
+                                // Handle login action
+                                when {
+                                    email.isEmpty() -> errorViewModel.handleError(ErrorState.ValidationError("Email cannot be empty"))
+                                    password.isEmpty() -> errorViewModel.handleError(ErrorState.ValidationError("Password cannot be empty"))
+                                    else -> {
+                                        // Perform login
+                                    }
+                                }
+                            },                            colors = ButtonDefaults.buttonColors(Color.Cyan),
                             modifier = Modifier.fillMaxWidth()
                         ) {
                             Text(text = "Sign Up")
@@ -150,4 +195,9 @@ fun PrincipalSignupScreen(navController: NavController,) {
             }
         }
     }
+    ErrorHandler(
+        errorState = errorViewModel.errorState.value,
+        onDismiss = { errorViewModel.clearError() }
+    )
 }
+

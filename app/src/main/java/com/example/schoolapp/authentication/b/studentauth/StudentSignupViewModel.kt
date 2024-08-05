@@ -18,7 +18,8 @@ class StudentSignupViewModel(navController:NavController):ViewModel(){
 //
 //    }
 
-        fun performAuthActionSignup(email: String, password: String) {
+        fun performAuthActionSignup(name: String,email: String, password: String) {
+            val name = name
             val email = email
             val password = password
 
@@ -36,6 +37,7 @@ class StudentSignupViewModel(navController:NavController):ViewModel(){
 
 
                         val studentData = hashMapOf(
+                            "Name" to name,
                             "Email" to email,
                         )
                         if (studentId != null) {

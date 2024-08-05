@@ -10,13 +10,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
-class TeacherLoginViewModel(navController:NavController): ViewModel() {
+class TeacherLoginViewModel : ViewModel() {
 
     private val auth = FirebaseUtil.getAuthCustom()
     private val db = FirebaseUtil.getFireStoreDbCustom()
 
 
-    fun performAuthAction(email: String, password: String) {
+    fun performAuthAction(name : String, email: String, password: String) {
+        val name = name
         val email = email
         val password = password
 
