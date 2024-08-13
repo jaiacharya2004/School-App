@@ -1,59 +1,55 @@
 package com.example.schoolapp.authentication.b.studentauth
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavController
 import com.example.schoolapp.com.example.schoolapp.FirebaseUtil
+import com.example.schoolapp.errorMessages.authenticationErrorMessages.ErrorState
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
-class StudentLoginViewModel(navController:NavController): ViewModel() {
-
+class StudentLoginViewModel : ViewModel() {
 
     private val auth = FirebaseUtil.getAuthCustom()
     private val db = FirebaseUtil.getFireStoreDbCustom()
 
+    private val _errorState = MutableStateFlow<ErrorState?>(null)
+    val errorState: StateFlow<ErrorState?> get() = _errorState
 
-    fun performAuthAction(name: String, email: String, password: String) {
-        val name = name
-        val email = email
-        val password = password
+    fun login(email: String, password: String) {
+        if (email.isEmpty()) {
+            _errorState.value = ErrorState.ValidationError("Email cannot be empty")
+            return
+        }
+
+        if (password.isEmpty()) {
+            _errorState.value = ErrorState.ValidationError("Password cannot be empty")
+            return
+        }
 
         viewModelScope.launch(Dispatchers.IO) {
-
             try {
-
                 val studentRef = db.collection("Students").whereEqualTo("Email", email)
-                Log.d("m0","database access")
                 val querySnapshot = studentRef.get().await()
-                Log.d("m3","$querySnapshot")
 
-                if (querySnapshot.size()!=0) {
-                    // User exist login
-                    val authResult = auth.signInWithEmailAndPassword(email,password).await()
+                if (querySnapshot.isEmpty) {
+                    _errorState.value = ErrorState.AuthenticationError("User does not exist")
+                } else {
+                    // User exists, proceed with login
+                    val authResult = auth.signInWithEmailAndPassword(email, password).await()
                     val user = auth.currentUser
-                    Log.d("LOGIN", "User LoggedIn WITH user id ${user?.uid}")
-                    //  navigate to teacher home screen
+                    // Handle successful login, e.g., navigate to home screen
+                    _errorState.value = null
                 }
-                else {
-                    // User does not exists, handle error
-                    Log.d("m1","User does not exists, bad credentials permission denied")
-
-                }
-
-
-//
-
-
-
             } catch (e: Exception) {
-                // Handle error
+                _errorState.value = ErrorState.NetworkError("Failed to login: ${e.message}")
             }
-
-
         }
     }
 
+    fun clearError() {
+        _errorState.value = null
+    }
 }

@@ -8,7 +8,7 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun ErrorHandler(
-    errorState: ErrorState,
+    errorState: ErrorState?,
     onDismiss: () -> Unit
 ) {
     val snackBarHostState = remember { SnackbarHostState() }
@@ -19,7 +19,7 @@ fun ErrorHandler(
             is ErrorState.NetworkError -> errorState.message
             is ErrorState.AuthenticationError -> errorState.message
             is ErrorState.ValidationError -> errorState.message
-            ErrorState.EmptyFieldError -> "Fields cannot be empty"
+            is ErrorState.EmptyFieldError -> errorState.message
             else -> ""
         }
 
@@ -39,13 +39,11 @@ fun ErrorHandler(
             },
             modifier = Modifier.padding(16.dp)
         ) {
-            // Directly use data's snackbar message
             Text(text = data.visuals.message)
         }
     }
 
     if (!showSnackbar) {
-        // Clear snackbar if no error to prevent unwanted display
         LaunchedEffect(Unit) {
             snackBarHostState.currentSnackbarData?.dismiss()
         }

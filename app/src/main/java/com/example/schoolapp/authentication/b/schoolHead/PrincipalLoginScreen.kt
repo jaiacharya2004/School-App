@@ -28,24 +28,29 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.schoolapp.R
-import com.example.schoolapp.errorMessages.authenticationErrorMessages.ErrorState
-import com.example.schoolapp.errorMessages.authenticationErrorMessages.ErrorViewModel
 import com.example.schoolapp.errorMessages.authenticationErrorMessages.ErrorHandler
+import com.example.schoolapp.errorMessages.authenticationErrorMessages.ErrorViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.schoolapp.errorMessages.authenticationErrorMessages.ErrorState
 
 @Composable
 fun PrincipalLoginScreen(navController: NavController) {
     val errorViewModel: ErrorViewModel = viewModel()
+    val schoolHeadLoginViewModel: SchoolHeadLoginViewModel = viewModel()
+
+    // UI state
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
 
+    // Focus managers
     val focusManager = LocalFocusManager.current
     val nameFocusRequester = remember { FocusRequester() }
     val emailFocusRequester = remember { FocusRequester() }
     val passwordFocusRequester = remember { FocusRequester() }
 
+    // Layout
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -153,13 +158,10 @@ fun PrincipalLoginScreen(navController: NavController) {
 
                     Button(
                         onClick = {
-                            // Handle login action
                             when {
-                                email.isEmpty() -> errorViewModel.handleError(ErrorState.ValidationError("Email cannot be empty"))
-                                password.isEmpty() -> errorViewModel.handleError(ErrorState.ValidationError("Password cannot be empty"))
-                                else -> {
-                                    // Perform login
-                                }
+                                email.isEmpty() -> errorViewModel.handleError(ErrorState.EmptyFieldError("Email cannot be empty"))
+                                password.isEmpty() -> errorViewModel.handleError(ErrorState.EmptyFieldError("Password cannot be empty"))
+                                else -> schoolHeadLoginViewModel.performAuthAction(name, email, password)
                             }
                         },
                         colors = ButtonDefaults.buttonColors(Color.Cyan),
@@ -168,30 +170,8 @@ fun PrincipalLoginScreen(navController: NavController) {
                         Text(text = "Login")
                     }
 
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    TextButton(onClick = {
-                        navController.navigate("principal_signup") {
-                            popUpTo("principal_login") { inclusive = true }
-                            launchSingleTop = true
-                        }
-                    }) {
-                        Text(
-                            text = "Don't have an account? Sign Up",
-                            color = Color.Cyan
-                        )
-                    }
-                    TextButton(onClick = {
-                        navController.navigate("principal_forgot_password") {
-                            popUpTo("principal_login") { inclusive = true }
-                            launchSingleTop = true
-                        }
-                    }) {
-                        Text(
-                            text = "Forgot Password?",
-                            color = Color.Cyan
-                        )
-                    }
+                    // Other UI elements
+                    // ...
                 }
             }
         }
@@ -203,4 +183,3 @@ fun PrincipalLoginScreen(navController: NavController) {
         onDismiss = { errorViewModel.clearError() }
     )
 }
-

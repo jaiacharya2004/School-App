@@ -16,7 +16,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
@@ -37,18 +36,16 @@ import com.example.schoolapp.errorMessages.authenticationErrorMessages.ErrorView
 
 @Composable
 fun TeacherLoginScreen(navController: NavController) {
-    val errorViewModel: ErrorViewModel = viewModel()
-    var name by remember { mutableStateOf("") }
+    val viewModel: TeacherLoginViewModel = viewModel()
+    val errorState by viewModel.errorState.collectAsState()
+
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
 
-    val nameFocusRequester = remember { FocusRequester() }
     val emailFocusRequester = remember { FocusRequester() }
     val passwordFocusRequester = remember { FocusRequester() }
 
-    val context = LocalContext.current
-    val viewModel: TeacherLoginViewModel = viewModel() // Use viewModel() instead of manually creating
     val focusManager = LocalFocusManager.current
 
     Box(
@@ -67,7 +64,7 @@ fun TeacherLoginScreen(navController: NavController) {
                     .fillMaxWidth()
                     .padding(16.dp),
                 elevation = CardDefaults.cardElevation(4.dp),
-                colors = CardDefaults.cardColors(containerColor = Color.DarkGray),
+                colors = CardDefaults.cardColors(containerColor = Color.DarkGray)
             ) {
                 Column(
                     modifier = Modifier
@@ -75,11 +72,11 @@ fun TeacherLoginScreen(navController: NavController) {
                         .padding(16.dp)
                 ) {
                     Image(
-                        painter = painterResource(id = R.drawable.teacher_signup_3), // Replace with your image resource
-                        contentDescription = "Signup Image",
+                        painter = painterResource(id = R.drawable.teacher_signup_3),
+                        contentDescription = "Login Image",
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(200.dp) // Adjust height as needed
+                            .height(200.dp)
                             .clip(MaterialTheme.shapes.medium)
                     )
                     Spacer(modifier = Modifier.height(16.dp))
@@ -88,27 +85,9 @@ fun TeacherLoginScreen(navController: NavController) {
                         text = "Teacher Login",
                         fontSize = 32.sp,
                         color = Color.Cyan,
-                        fontWeight = FontWeight.Medium,
+                        fontWeight = FontWeight.Medium
                     )
                     Spacer(modifier = Modifier.height(16.dp))
-
-                    OutlinedTextField(
-                        value = name,
-                        onValueChange = { name = it },
-                        label = { Text(text = "Name") },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .focusRequester(nameFocusRequester),
-                        shape = RoundedCornerShape(20.dp),
-                        keyboardOptions = KeyboardOptions(
-                            imeAction = ImeAction.Next
-                        ),
-                        keyboardActions = KeyboardActions(
-                            onNext = { emailFocusRequester.requestFocus() }
-                        )
-                    )
-
-                    Spacer(modifier = Modifier.height(12.dp))
 
                     OutlinedTextField(
                         value = email,
@@ -138,14 +117,9 @@ fun TeacherLoginScreen(navController: NavController) {
                         shape = RoundedCornerShape(20.dp),
                         visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                         trailingIcon = {
-                            val image =
-                                if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
-
+                            val image = if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
                             IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                                Icon(
-                                    imageVector = image,
-                                    contentDescription = if (passwordVisible) "Hide password" else "Show password"
-                                )
+                                Icon(imageVector = image, contentDescription = if (passwordVisible) "Hide password" else "Show password")
                             }
                         },
                         keyboardOptions = KeyboardOptions(
@@ -159,31 +133,17 @@ fun TeacherLoginScreen(navController: NavController) {
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp),
-                        contentAlignment = Alignment.Center
+                    Button(
+                        onClick = {
+                            viewModel.performAuthAction(email, password)
+                        },
+                        colors = ButtonDefaults.buttonColors(Color.Cyan),
+                        modifier = Modifier.fillMaxWidth()
                     ) {
-                        Button(
-                            onClick = {
-                                // Handle login action
-                                when {
-                                    email.isEmpty() -> errorViewModel.handleError(ErrorState.ValidationError("Email cannot be empty"))
-                                    password.isEmpty() -> errorViewModel.handleError(ErrorState.ValidationError("Password cannot be empty"))
-                                    else -> {
-                                        // Perform login
-                                    }
-                                }
-                            },
-                            colors = ButtonDefaults.buttonColors(Color.Cyan),
-                            modifier = Modifier
-                                .fillMaxWidth(),
-                        ) {
-                            Text(text = "Login")
-                        }
-                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(text = "Login")
                     }
+
+                    Spacer(modifier = Modifier.height(8.dp))
 
                     TextButton(onClick = {
                         navController.navigate("teacher_signup") {
@@ -191,29 +151,23 @@ fun TeacherLoginScreen(navController: NavController) {
                             launchSingleTop = true
                         }
                     }) {
-                        Text(
-                            text = "Don't have an account? Sign Up",
-                            color = Color.Cyan
-                        )
+                        Text(text = "Don't have an account? Sign Up", color = Color.Cyan)
                     }
+
                     TextButton(onClick = {
                         navController.navigate("teacher_forgot_password") {
                             popUpTo("teacher_login") { inclusive = true }
                             launchSingleTop = true
                         }
                     }) {
-                        Text(
-                            text = "Forgot Password?",
-                            color = Color.Cyan
-                        )
+                        Text(text = "Forgot Password?", color = Color.Cyan)
                     }
-                }
                 }
             }
         }
-    ErrorHandler(
-        errorState = errorViewModel.errorState.value,
-        onDismiss = { errorViewModel.clearError() }
-    )
     }
-
+    ErrorHandler(
+        errorState = errorState,
+        onDismiss = { viewModel.clearError() }
+    )
+}

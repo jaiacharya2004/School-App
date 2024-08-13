@@ -17,7 +17,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -31,25 +30,22 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.schoolapp.R
 import com.example.schoolapp.errorMessages.authenticationErrorMessages.ErrorHandler
-import com.example.schoolapp.errorMessages.authenticationErrorMessages.ErrorState
 import com.example.schoolapp.errorMessages.authenticationErrorMessages.ErrorViewModel
 
 @Composable
 fun StudentSignupScreen(navController: NavController) {
+    val viewModel: StudentSignupViewModel = viewModel()
     val errorViewModel: ErrorViewModel = viewModel()
+
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
 
-    // Create FocusRequesters for each text field
     val nameFocusRequester = remember { FocusRequester() }
     val emailFocusRequester = remember { FocusRequester() }
     val passwordFocusRequester = remember { FocusRequester() }
-
     val focusManager = LocalFocusManager.current
-    val context = LocalContext.current
-    val viewModel = remember { StudentSignupViewModel(navController) }
 
     Box(
         modifier = Modifier
@@ -85,10 +81,10 @@ fun StudentSignupScreen(navController: NavController) {
                     Spacer(modifier = Modifier.height(16.dp))
 
                     Text(
-                        text = "     Student Sign Up",
+                        text = "Student Sign Up",
                         fontSize = 32.sp,
                         color = Color.Cyan,
-                        fontWeight = FontWeight.Medium,
+                        fontWeight = FontWeight.Medium
                     )
                     Spacer(modifier = Modifier.height(16.dp))
 
@@ -98,7 +94,6 @@ fun StudentSignupScreen(navController: NavController) {
                         label = { Text(text = "Name") },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .width(100.dp)
                             .focusRequester(nameFocusRequester),
                         shape = RoundedCornerShape(20.dp),
                         keyboardOptions = KeyboardOptions(
@@ -117,7 +112,6 @@ fun StudentSignupScreen(navController: NavController) {
                         label = { Text(text = "Email") },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .width(100.dp)
                             .focusRequester(emailFocusRequester),
                         shape = RoundedCornerShape(20.dp),
                         keyboardOptions = KeyboardOptions(
@@ -136,7 +130,6 @@ fun StudentSignupScreen(navController: NavController) {
                         label = { Text(text = "Password") },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .width(100.dp)
                             .focusRequester(passwordFocusRequester),
                         shape = RoundedCornerShape(20.dp),
                         visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
@@ -155,49 +148,31 @@ fun StudentSignupScreen(navController: NavController) {
                             keyboardType = KeyboardType.Password
                         ),
                         keyboardActions = KeyboardActions(
-                            onDone = {
-                                focusManager.clearFocus()
-                                // Optionally, you can call the signup method here
-                                // viewModel.performAuthActionSignup(name, email, password)
-                            }
+                            onDone = { focusManager.clearFocus() }
                         )
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp),
-                        contentAlignment = Alignment.Center
+                    Button(
+                        onClick = {
+                            viewModel.performAuthAction(name, email, password)
+                        },
+                        colors = ButtonDefaults.buttonColors(Color.Cyan),
+                        modifier = Modifier.fillMaxWidth()
                     ) {
-                        Button(
-                            onClick = {
-                                // Handle login action
-                                when {
-                                    email.isEmpty() -> errorViewModel.handleError(ErrorState.ValidationError("Email cannot be empty"))
-                                    password.isEmpty() -> errorViewModel.handleError(ErrorState.ValidationError("Password cannot be empty"))
-                                    else -> {
-                                        // Perform login
-                                    }
-                                }
-                            },                            colors = ButtonDefaults.buttonColors(Color.Cyan),
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Text(text = "Sign Up")
-                        }
+                        Text(text = "Sign Up")
                     }
+
                     Spacer(modifier = Modifier.height(8.dp))
+
                     TextButton(onClick = {
                         navController.navigate("student_login") {
                             popUpTo("student_signup") { inclusive = true }
                             launchSingleTop = true
                         }
                     }) {
-                        Text(
-                            text = "             Already have an account? Login",
-                            color = Color.Cyan
-                        )
+                        Text(text = "Already have an account? Login", color = Color.Cyan)
                     }
                 }
             }

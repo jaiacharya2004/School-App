@@ -16,10 +16,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -32,13 +30,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.schoolapp.R
 import com.example.schoolapp.errorMessages.authenticationErrorMessages.ErrorHandler
-import com.example.schoolapp.errorMessages.authenticationErrorMessages.ErrorState
-import com.example.schoolapp.errorMessages.authenticationErrorMessages.ErrorViewModel
-
 
 @Composable
 fun PrincipalSignupScreen(navController: NavController) {
-    val errorViewModel: ErrorViewModel = viewModel()
+    val viewModel: SchoolHeadSignupViewModel = viewModel()
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -48,7 +43,6 @@ fun PrincipalSignupScreen(navController: NavController) {
     val nameFocusRequester = remember { FocusRequester() }
     val emailFocusRequester = remember { FocusRequester() }
     val passwordFocusRequester = remember { FocusRequester() }
-    val viewModel = remember { SchoolHeadSignupViewModel(navController) }
 
     Box(
         modifier = Modifier
@@ -74,17 +68,17 @@ fun PrincipalSignupScreen(navController: NavController) {
                         .padding(16.dp)
                 ) {
                     Image(
-                        painter = painterResource(id = R.drawable.principal_login), // Replace with your image resource
+                        painter = painterResource(id = R.drawable.principal_login),
                         contentDescription = "Signup Image",
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(200.dp) // Adjust height as needed
+                            .height(200.dp)
                             .clip(MaterialTheme.shapes.medium)
                     )
                     Spacer(modifier = Modifier.height(16.dp))
 
                     Text(
-                        text = "   Principal Sign Up",
+                        text = "Principal Sign Up",
                         fontSize = 32.sp,
                         color = Color.Cyan,
                         fontWeight = FontWeight.Medium,
@@ -138,7 +132,6 @@ fun PrincipalSignupScreen(navController: NavController) {
                         visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                         trailingIcon = {
                             val image = if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
-
                             IconButton(onClick = { passwordVisible = !passwordVisible }) {
                                 Icon(
                                     imageVector = image,
@@ -157,34 +150,20 @@ fun PrincipalSignupScreen(navController: NavController) {
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp),
-                        contentAlignment = Alignment.Center
+                    Button(
+                        onClick = {
+                            viewModel.performAuthAction(name, email, password)
+                        },
+                        colors = ButtonDefaults.buttonColors(Color.Cyan),
+                        modifier = Modifier.fillMaxWidth()
                     ) {
-                        Button(
-                            onClick = {
-                                // Handle login action
-                                when {
-                                    email.isEmpty() -> errorViewModel.handleError(ErrorState.ValidationError("Email cannot be empty"))
-                                    password.isEmpty() -> errorViewModel.handleError(ErrorState.ValidationError("Password cannot be empty"))
-                                    else -> {
-                                        // Perform login
-                                    }
-                                }
-                            },                            colors = ButtonDefaults.buttonColors(Color.Cyan),
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Text(text = "Sign Up")
-                        }
+                        Text(text = "Sign Up")
                     }
+
                     Spacer(modifier = Modifier.height(8.dp))
+
                     TextButton(onClick = {
-                        navController.navigate("principal_login") {
-                            popUpTo("principal_signup") { inclusive = true }
-                            launchSingleTop = true
-                        }
+                        navController.navigate("login_screen")
                     }) {
                         Text(
                             text = "Already have an account? Login",
@@ -195,9 +174,10 @@ fun PrincipalSignupScreen(navController: NavController) {
             }
         }
     }
+
+    // Display the error message
     ErrorHandler(
-        errorState = errorViewModel.errorState.value,
-        onDismiss = { errorViewModel.clearError() }
+        errorState = viewModel.errorState.collectAsState().value,
+        onDismiss = { viewModel.clearError() }
     )
 }
-

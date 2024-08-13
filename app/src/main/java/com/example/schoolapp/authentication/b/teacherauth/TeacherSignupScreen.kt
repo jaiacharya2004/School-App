@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
@@ -16,7 +17,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -32,19 +33,21 @@ import com.example.schoolapp.errorMessages.authenticationErrorMessages.ErrorHand
 import com.example.schoolapp.errorMessages.authenticationErrorMessages.ErrorState
 import com.example.schoolapp.errorMessages.authenticationErrorMessages.ErrorViewModel
 
-
 @Composable
 fun TeacherSignupScreen(navController: NavController) {
     val errorViewModel: ErrorViewModel = viewModel()
-    val viewModel: TeacherSignupViewModel = viewModel()
-    val nameFocusRequester = remember { FocusRequester() }
-    val emailFocusRequester = remember { FocusRequester() }
-    val passwordFocusRequester = remember { FocusRequester() }
+    val signupViewModel: TeacherSignupViewModel = viewModel()
 
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
+
+    val nameFocusRequester = remember { FocusRequester() }
+    val emailFocusRequester = remember { FocusRequester() }
+    val passwordFocusRequester = remember { FocusRequester() }
+
+    val focusManager = LocalFocusManager.current
 
     Box(
         modifier = Modifier
@@ -69,16 +72,37 @@ fun TeacherSignupScreen(navController: NavController) {
                         .fillMaxWidth()
                         .padding(16.dp)
                 ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.teacher_signup_3),
+                        contentDescription = "Signup Image",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(200.dp)
+                            .clip(MaterialTheme.shapes.medium)
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Text(
+                        text = "Teacher Signup",
+                        fontSize = 32.sp,
+                        color = Color.Cyan,
+                        fontWeight = FontWeight.Medium
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+
                     OutlinedTextField(
                         value = name,
                         onValueChange = { name = it },
                         label = { Text(text = "Name") },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .focusRequester(nameFocusRequester), // Request focus here
+                            .focusRequester(nameFocusRequester),
                         shape = RoundedCornerShape(20.dp),
                         keyboardOptions = KeyboardOptions(
                             imeAction = ImeAction.Next
+                        ),
+                        keyboardActions = KeyboardActions(
+                            onNext = { emailFocusRequester.requestFocus() }
                         )
                     )
 
@@ -90,10 +114,13 @@ fun TeacherSignupScreen(navController: NavController) {
                         label = { Text(text = "Email") },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .focusRequester(emailFocusRequester), // Request focus here
+                            .focusRequester(emailFocusRequester),
                         shape = RoundedCornerShape(20.dp),
                         keyboardOptions = KeyboardOptions(
                             imeAction = ImeAction.Next
+                        ),
+                        keyboardActions = KeyboardActions(
+                            onNext = { passwordFocusRequester.requestFocus() }
                         )
                     )
 
@@ -105,13 +132,11 @@ fun TeacherSignupScreen(navController: NavController) {
                         label = { Text(text = "Password") },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .focusRequester(passwordFocusRequester), // Request focus here
+                            .focusRequester(passwordFocusRequester),
                         shape = RoundedCornerShape(20.dp),
                         visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                         trailingIcon = {
-                            val image =
-                                if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
-
+                            val image = if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
                             IconButton(onClick = { passwordVisible = !passwordVisible }) {
                                 Icon(imageVector = image, contentDescription = if (passwordVisible) "Hide password" else "Show password")
                             }
@@ -119,10 +144,14 @@ fun TeacherSignupScreen(navController: NavController) {
                         keyboardOptions = KeyboardOptions(
                             imeAction = ImeAction.Done,
                             keyboardType = KeyboardType.Password
+                        ),
+                        keyboardActions = KeyboardActions(
+                            onDone = { focusManager.clearFocus() }
                         )
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
+
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -131,18 +160,11 @@ fun TeacherSignupScreen(navController: NavController) {
                     ) {
                         Button(
                             onClick = {
-                                // Handle login action
-                                when {
-                                    email.isEmpty() -> errorViewModel.handleError(ErrorState.ValidationError("Email cannot be empty"))
-                                    password.isEmpty() -> errorViewModel.handleError(ErrorState.ValidationError("Password cannot be empty"))
-                                    else -> {
-                                        // Perform login
-                                    }
-                                }
+                                signupViewModel.performSignup(name,email, password)
+
                             },
                             colors = ButtonDefaults.buttonColors(Color.Cyan),
-                            modifier = Modifier
-                                .fillMaxWidth(),
+                            modifier = Modifier.fillMaxWidth()
                         ) {
                             Text(text = "Sign Up")
                         }
@@ -155,10 +177,7 @@ fun TeacherSignupScreen(navController: NavController) {
                             launchSingleTop = true
                         }
                     }) {
-                        Text(
-                            text = " Already have an account? Login",
-                            color = Color.Cyan
-                        )
+                        Text(text = "Already have an account? Login", color = Color.Cyan)
                     }
                 }
             }
