@@ -1,5 +1,6 @@
 package com.example.schoolapp
 
+import ActivateScreen
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -8,6 +9,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.schoolapp.StudyBase.Login.ForgetScreen
+import com.example.schoolapp.StudyBase.Login.LoginScreen
+import com.example.schoolapp.StudyBase.StudyBaseScreen
+import com.example.schoolapp.StudyBase.onBoardingIntro.OnboardingScreen
 import com.example.schoolapp.authentication.b.common.EnterVerificationCodeScreen
 import com.example.schoolapp.authentication.b.common.ForgotPasswordScreen
 import com.example.schoolapp.authentication.b.common.ResetPasswordScreen
@@ -27,8 +32,14 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             SchoolAppTheme {
-                val navController = rememberNavController()
-                AppNavigation(navController)
+//                val navController = rememberNavController()
+//                AppNavigation(navController)
+//                StudyBaseScreen()
+//                OnboardingScreen()
+//                ActivateScreen()
+//                LoginScreen()
+//                ForgetScreen()
+
             }
         }
     }
