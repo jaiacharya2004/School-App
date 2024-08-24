@@ -11,7 +11,7 @@ object FirebaseUtil {
         return auth
     }
 
-    fun getFireStoreDbCustom():FirebaseFirestore{
+    fun getFireStoreDbCustom(): FirebaseFirestore {
         return fireStoreDb
     }
 

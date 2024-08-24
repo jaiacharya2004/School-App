@@ -1,8 +1,6 @@
-package com.example.schoolapp.AppCentral
+package com.example.schoolapp.appCentral
 
 import androidx.lifecycle.MutableLiveData
-import com.google.firebase.firestore.auth.User
-import com.google.firebase.firestore.remote.ConnectivityMonitor
 
 object AppState {
 //    val currentUser: MutableLiveData<User?> = MutableLiveData()

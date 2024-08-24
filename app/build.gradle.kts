@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.google.gms.google.services)
+
 }
 
 android {
@@ -64,6 +65,7 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended:1.4.3")
     implementation("com.google.firebase:firebase-firestore")
     implementation(platform("com.google.firebase:firebase-bom:33.1.2"))
+    implementation(libs.androidx.room.runtime.android)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

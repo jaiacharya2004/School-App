@@ -13,3 +13,8 @@
     // School Head Signup Empty text field messages
      // Empty fields and incorrect formats
      // Implementing Focus Manager in All auth Screens for outlined text fields
+
+
+// Crucial
+// We have to implement Logout as well and also have to deallocate the memory
+//
