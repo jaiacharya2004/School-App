@@ -41,7 +41,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
+        kotlinCompilerExtensionVersion = "1.5.1" // Update to the latest version if available
     }
     packaging {
         resources {
@@ -55,15 +55,13 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.ui)
-    implementation(libs.androidx.ui.graphics)
-    implementation(libs.androidx.ui.tooling.preview)
-    implementation(libs.androidx.material3)
+    implementation(libs.androidx.material3) // Use Material3 only
     implementation(libs.androidx.navigation.compose)
     implementation(libs.firebase.auth)
-    implementation("androidx.compose.material:material-icons-extended:1.4.3")
-    implementation("com.google.firebase:firebase-firestore")
-    implementation(platform("com.google.firebase:firebase-bom:33.1.2"))
+    implementation("com.google.firebase:firebase-firestore:24.5.0") // Ensure this is the latest version
+    implementation(platform("com.google.firebase:firebase-bom:33.1.2")) // Ensure this is the latest version
+    implementation("androidx.room:room-runtime:2.6.1") // Ensure this is the latest version
+    implementation(libs.androidx.constraintlayout.compose)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

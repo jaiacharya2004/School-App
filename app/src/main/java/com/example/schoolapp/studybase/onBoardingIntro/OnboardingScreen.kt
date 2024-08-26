@@ -1,4 +1,4 @@
-package com.example.schoolapp.StudyBase.onBoardingIntro
+package com.example.schoolapp.studybase.onBoardingIntro
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
