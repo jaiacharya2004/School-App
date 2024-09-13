@@ -11,10 +11,15 @@ val Typography = Typography(
     bodyLarge = TextStyle(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Normal,
-        fontSize = 16.sp,
-        lineHeight = 24.sp,
-        letterSpacing = 0.5.sp
+        fontSize = 16.sp
+    ),
+    titleLarge = TextStyle(
+        fontFamily = FontFamily.Serif, // You can use Times Roman here
+        fontWeight = FontWeight.Bold,
+        fontSize = 22.sp
     )
+)
+
     /* Other default text styles to override
     titleLarge = TextStyle(
         fontFamily = FontFamily.Default,
@@ -31,4 +36,3 @@ val Typography = Typography(
         letterSpacing = 0.5.sp
     )
     */
-)

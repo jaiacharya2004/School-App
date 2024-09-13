@@ -1,4 +1,4 @@
-package com.example.schoolapp.errorMessages.authenticationErrorMessages
+package com.example.schoolapp.authentication.b.authErrors
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*

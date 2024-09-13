@@ -1,4 +1,4 @@
-package com.example.schoolapp.errorMessages.authenticationErrorMessages
+package com.example.schoolapp.authentication.b.authErrors
 
 sealed class ErrorState {
     data class NetworkError(val message: String) : ErrorState()
