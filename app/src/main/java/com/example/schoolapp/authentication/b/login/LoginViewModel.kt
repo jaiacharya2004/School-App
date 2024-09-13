@@ -21,14 +21,14 @@ class LoginViewModel @Inject constructor(
 ): ViewModel() {
 
     private val repo = AuthRepositoryImpl()
-    var signInResponse = mutableStateOf<SignInResponse>(Success(false))
+    var userSignInResponse = mutableStateOf<SignInResponse>(Success(false))
         private set
 
-    fun logInWithEmailAndPassword(email: String, password: String) = viewModelScope.launch(Dispatchers.IO) {
-        Log.d("fc1","yes")
-        signInResponse.value = Loading
-        signInResponse.value = repo.firebaseSignInWithEmailAndPassword(email, password)
-     // if sign in success the signInResponse will store the Success<uid>
+   suspend  fun logInWithEmailAndPassword(email: String, password: String) :SignInResponse {
+        userSignInResponse.value = Loading
+        userSignInResponse.value = repo.firebaseSignInWithEmailAndPassword(email, password)
+        return userSignInResponse.value
+    // if sign in success the signInResponse will store the Success<uid>
     }
 
 }

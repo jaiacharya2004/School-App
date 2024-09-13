@@ -2,11 +2,9 @@ package com.example.schoolapp.authentication.b.login
 
 import android.util.Log
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
 import androidx.compose.material3.Icon
 import androidx.compose.ui.graphics.Path
 import androidx.compose.material3.*
@@ -27,13 +25,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 
-
-
 import androidx.navigation.NavController
 import com.example.schoolapp.R
 import com.example.schoolapp.authentication.b.model.Response.Success
 import com.example.schoolapp.authentication.b.model.Response.Failure
-
+import com.example.schoolapp.authentication.b.model.Response.Loading
 
 @Composable
 fun LoginScreen(navController: NavController) {
@@ -44,7 +40,11 @@ fun LoginScreen(navController: NavController) {
     var passwordVisibility by remember { mutableStateOf(true) }
     var emailError by remember { mutableStateOf(false) }
     var passwordError by remember { mutableStateOf(false) }
-    val viewModel = LoginViewModel()
+    val loginViewModel = LoginViewModel()
+    var isLoading by remember { mutableStateOf(false) }
+    var buttonClickCount = remember { mutableIntStateOf(0) }
+    var userLoginStatus = loginViewModel.userSignInResponse
+
 
     Box(
         modifier = Modifier
@@ -186,18 +186,8 @@ fun LoginScreen(navController: NavController) {
                     passwordError = isPasswordEmpty
 
                     if (!isEmailEmpty && !isPasswordEmpty) {
-
-                        Log.d("signinresponse 0", "LoginScreen: ${viewModel.signInResponse.value}")
-                        viewModel.logInWithEmailAndPassword(emailState.value,passwordState.value)
-
-                        if(viewModel.signInResponse.value is Success) {
-
-                            Log.d("navigate to home screen", "LoginScreen -> home screen")
-                        }
-                        else if(viewModel.signInResponse.value is Failure){
-                            Log.d("signinresponse 1", "LoginScreen: ${viewModel.signInResponse.value}")
-                        }
-
+                        buttonClickCount.intValue++
+                        isLoading = true
 
                     }
                 },
@@ -208,7 +198,32 @@ fun LoginScreen(navController: NavController) {
                 Text(text = "Login", fontSize = 22.sp)
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+
+            if(buttonClickCount.intValue>0) {
+                LaunchedEffect(key1 = buttonClickCount) {
+                    userLoginStatus.value = loginViewModel.logInWithEmailAndPassword(emailState.value,passwordState.value)
+                    Log.d("userLoginStatus final", "LoginScreen: $userLoginStatus")
+
+
+                    when(userLoginStatus.value) {
+                        is Success -> {
+                            isLoading = false
+                            navController.navigate("home_screen")
+                        }
+                        is Failure ->{
+                            Log.d("userLoginStatus Failure", "LoginScreen: $userLoginStatus")
+
+                        }
+                        is Loading ->{
+                            isLoading = true
+                            Log.d("userLoginStatus Loading", "LoginScreen: $userLoginStatus")
+
+                        }
+                    }
+                }
+            }
+
+                Spacer(modifier = Modifier.height(16.dp))
 
             TextButton(onClick = {
                 navController.navigate("forget_screen")

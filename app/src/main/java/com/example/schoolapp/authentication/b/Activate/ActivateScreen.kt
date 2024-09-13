@@ -192,11 +192,12 @@ fun ActivateScreen(navController: NavController,viewModel: ActivateViewModel ) {
 
                 Button(
                     onClick = {
-                       buttonClickCount.intValue++
+
                         Log.d("buttonClickCount", "$buttonClickCount")
                         if (emailState.isEmpty()) {
                             showError = true
                         } else {
+                            buttonClickCount.intValue++
                             isLoading = true
                         }
 
