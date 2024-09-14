@@ -10,6 +10,7 @@ import com.example.schoolapp.authentication.b.repository.UserExistsResponse
 import com.example.schoolapp.com.example.schoolapp.FirebaseUtil
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuth.AuthStateListener
+import com.google.firebase.firestore.SetOptions
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.SharingStarted
@@ -28,12 +29,14 @@ class AuthRepositoryImpl @Inject constructor(
     private val auth= FirebaseUtil.getAuthCustom()
     private val db = FirebaseUtil.getFireStoreDbCustom()
     override val currentUser get() = auth.currentUser
+    override var docId: String ="NA"
+
 
     override suspend fun firebaseSignUpWithEmailAndPassword(
         email: String, password: String
     ) = try {
        val signUpResult = auth.createUserWithEmailAndPassword(email, password).await()
-        Log.d("TAG ", "${signUpResult}")
+        Log.d("TAG ", "$signUpResult")
         val uid = signUpResult.user?.uid?:throw Exception("Unsuccessful SignUp operation")
         Success(uid)
     } catch (e: Exception) {
@@ -96,17 +99,17 @@ class AuthRepositoryImpl @Inject constructor(
         = try {
 
             val collectionRef = when (userType) {
-                UserType.TEACHER -> db.collection("teachers")
-                UserType.SCHOOL_HEAD -> db.collection("admins")
-
+                UserType.TEACHER -> db.collection("Teachers")
+                UserType.SCHOOL_HEAD -> db.collection("Schools")
             }
 
 
-            val querySnapshot = db.collection("Teachers").whereEqualTo("Email", email).get().await()
+            val querySnapshot = collectionRef.whereEqualTo("Email", email).get().await()
 
             if (querySnapshot.documents.isNotEmpty()) {
 
                 val documentId = querySnapshot.documents.first().id
+                docId = documentId
 
                 Success(documentId)
             } else {
@@ -118,7 +121,19 @@ class AuthRepositoryImpl @Inject constructor(
             Failure(e)
         }
 
+    override suspend fun markUserAsActivated( userType: UserType)
+       =   try{
+        val collectionRef = when (userType) {
+            UserType.TEACHER -> db.collection("Teachers")
+            UserType.SCHOOL_HEAD -> db.collection("Schools")
+        }
 
+        val activationStatus = hashMapOf("Activation Status" to true)
 
+        val writeTask = collectionRef.document(docId).set(activationStatus, SetOptions.merge()).await()
+       }
+    catch (e:Exception){
+        Failure(Exception("Unknown error: ${e.message}"))
 
+    }
 }

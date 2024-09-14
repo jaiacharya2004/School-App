@@ -220,6 +220,7 @@ fun ActivatePassword(navController: NavController,viewModel: ActivateViewModel )
                     Spacer(modifier = Modifier.height(32.dp))
 
                     Button(
+                       // password matching operation pending
                         onClick = {
                             buttonClickCount.intValue++
                             newPasswordError = newPassword.isEmpty()
@@ -244,7 +245,11 @@ fun ActivatePassword(navController: NavController,viewModel: ActivateViewModel )
 
                                 when(userCreationState.value){
                                     is Success -> {
+
+                                        activateViewModel.activateUser()
+                                        // complete the instantiation of the user
                                         navController.navigate("home_screen")
+
                                     }
                                     is Failure -> {
 

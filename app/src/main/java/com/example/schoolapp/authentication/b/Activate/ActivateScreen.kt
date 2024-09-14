@@ -218,6 +218,7 @@ if(buttonClickCount.intValue>0) {
 
                 when(userPresenceStatus.value){
                     is Success -> {
+                        // instantiate the user with docId at higher state
                         activateViewModel.userEmail = emailState
                         Log.d("Email","${activateViewModel.userEmail}")
                         navController.navigate("activate_password")

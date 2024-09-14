@@ -1,5 +1,6 @@
 package com.example.schoolapp.authentication.b.repository
 
+import com.example.schoolapp.appCentral.User
 import com.example.schoolapp.appCentral.UserType
 import com.example.schoolapp.authentication.b.model.Response
 import com.google.firebase.auth.FirebaseUser
@@ -15,9 +16,12 @@ typealias SendPasswordResetEmailResponse = Response<Boolean>
 typealias RevokeAccessResponse = Response<Boolean>
 typealias AuthStateResponse = StateFlow<Boolean>
 typealias UserExistsResponse =  Response<Any>
+typealias UserActivatedResponse = Response<Boolean>
 
 interface AuthRepository {
     val currentUser: FirebaseUser?
+
+    var docId:String
 
     suspend fun firebaseSignUpWithEmailAndPassword(email: String, password: String): SignUpResponse
 
@@ -36,4 +40,6 @@ interface AuthRepository {
     fun getAuthState(viewModelScope: CoroutineScope): AuthStateResponse
 
     suspend fun checkUserPresence(email:String,userType: UserType):UserExistsResponse
+
+    suspend fun markUserAsActivated(userType: UserType):Any
 }

@@ -6,7 +6,6 @@ import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 
 import com.example.schoolapp.appCentral.UserType
 import com.example.schoolapp.authentication.b.data.AuthRepositoryImpl
@@ -14,11 +13,9 @@ import com.example.schoolapp.authentication.b.model.Response.Loading
 import com.example.schoolapp.authentication.b.repository.SignInResponse
 import com.example.schoolapp.authentication.b.model.Response.Failure
 import com.example.schoolapp.authentication.b.model.Response.Success
-import com.example.schoolapp.authentication.b.repository.SignUpResponse
-import kotlinx.coroutines.Dispatchers
 
 
-import kotlinx.coroutines.launch
+
 
 
 
@@ -28,6 +25,8 @@ class ActivateViewModel(): ViewModel() {
 
      var userEmail:String =""
 
+    var userTypeViewModel: UserType = UserType.TEACHER
+
     private val authRepository = AuthRepositoryImpl()
     var userPresenceStatus = mutableStateOf<SignInResponse>(Failure(Exception("User Does not exists")))
     private set
@@ -36,7 +35,7 @@ class ActivateViewModel(): ViewModel() {
     private set
 
     suspend fun checkUserPresence(email:String,userType: UserType):SignInResponse{
-
+            userTypeViewModel = userType
             Log.d("checkUserPresence in viewmodel 0","{${userPresenceStatus.value}}")
 
             userPresenceStatus.value = Loading
@@ -64,6 +63,12 @@ class ActivateViewModel(): ViewModel() {
          Log.d("userCreationStatus in viewmodel 1","{${userCreationStatus.value}}")
 
     return userCreationStatus.value
+    }
+
+
+    suspend fun activateUser(){
+       Log.d("docId","$userPresenceStatus")
+        authRepository.markUserAsActivated( userTypeViewModel)
     }
 
 

@@ -7,7 +7,7 @@
     // Network Status -> Is UserOffline or IsOnline
     // What to use for AppState file class or object
     // Debugging and Testing strategy for the app -> JUnit and Espresso
-    // Firestore Firebase Authentication
+
 
 
     // School Head Signup Empty text field messages
@@ -19,5 +19,5 @@
 // We have to implement Logout as well and also have to deallocate the memory
 // A OTP Screen is required between activate screen and confirm password screen
 // for now user is activated we need a user object to be instantiated and a mainviewmodel for saving the user authstate
-// login ad forgot password
+//  forgot password
 // is user is activated we cannot activate it again hence after creating the user we have to mark tha user as activated
