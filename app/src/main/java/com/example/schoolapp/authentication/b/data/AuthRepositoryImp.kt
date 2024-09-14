@@ -2,6 +2,7 @@ package com.example.schoolapp.authentication.b.data
 
 import android.util.Log
 import com.example.schoolapp.appCentral.UserType
+import com.example.schoolapp.authentication.b.model.Response
 import com.example.schoolapp.authentication.b.model.Response.Success
 import com.example.schoolapp.authentication.b.model.Response.Failure
 
@@ -11,6 +12,7 @@ import com.example.schoolapp.com.example.schoolapp.FirebaseUtil
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuth.AuthStateListener
 import com.google.firebase.firestore.SetOptions
+import com.google.firebase.firestore.getField
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.SharingStarted
@@ -93,11 +95,11 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), auth.currentUser == null)
 
-    override suspend fun checkUserPresence(email: String,userType: UserType)
+    override suspend fun checkUserPresenceAsActivated(email: String,userType: UserType)
 
 
         = try {
-
+            var returnAns :Response<Any> = Success(false)
             val collectionRef = when (userType) {
                 UserType.TEACHER -> db.collection("Teachers")
                 UserType.SCHOOL_HEAD -> db.collection("Schools")
@@ -108,14 +110,28 @@ class AuthRepositoryImpl @Inject constructor(
 
             if (querySnapshot.documents.isNotEmpty()) {
 
-                val documentId = querySnapshot.documents.first().id
-                docId = documentId
+                // check is user is activated or not
+                val doc= querySnapshot.documents.first()
+                 docId = querySnapshot.documents.first().id
 
-                Success(documentId)
+
+                val activationStatus:Boolean? = doc.getField<Boolean>("Activation Status")
+                returnAns = if(activationStatus!=null){
+                    if(activationStatus){
+                        Failure(Exception("User is already Activated"))
+                    } else{
+                        Success(docId)
+                    }
+
+                } else{
+                    Failure(Exception("USER ACTIVATION STATUS IS NULL"))
+                }
+                returnAns
             } else {
 
                 Failure(Exception("User does not exist 1"))
             }
+
         } catch (e: Exception) {
 
             Failure(e)

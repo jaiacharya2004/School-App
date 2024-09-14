@@ -39,7 +39,7 @@ interface AuthRepository {
 
     fun getAuthState(viewModelScope: CoroutineScope): AuthStateResponse
 
-    suspend fun checkUserPresence(email:String,userType: UserType):UserExistsResponse
+    suspend fun checkUserPresenceAsActivated(email:String,userType: UserType):UserExistsResponse
 
     suspend fun markUserAsActivated(userType: UserType):Any
 }

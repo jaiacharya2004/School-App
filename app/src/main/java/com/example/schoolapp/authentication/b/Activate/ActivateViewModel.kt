@@ -34,13 +34,13 @@ class ActivateViewModel(): ViewModel() {
     var userCreationStatus = mutableStateOf<SignInResponse>(Failure(Exception("Cannot create a new user:Error ")))
     private set
 
-    suspend fun checkUserPresence(email:String,userType: UserType):SignInResponse{
+    suspend fun checkUserPresenceAsActivated(email:String,userType: UserType):SignInResponse{
             userTypeViewModel = userType
             Log.d("checkUserPresence in viewmodel 0","{${userPresenceStatus.value}}")
 
             userPresenceStatus.value = Loading
 
-            userPresenceStatus.value = authRepository.checkUserPresence(email,userType)
+            userPresenceStatus.value = authRepository.checkUserPresenceAsActivated(email,userType)
 
             Log.d("checkUserPresence in viewmodel 1","{${userPresenceStatus.value}}")
             if(userPresenceStatus.value is Success){
