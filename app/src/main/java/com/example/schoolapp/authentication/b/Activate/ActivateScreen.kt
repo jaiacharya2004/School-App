@@ -214,7 +214,7 @@ if(buttonClickCount.intValue>0) {
 
         if (emailState.isNotEmpty()) {
 
-            userPresenceStatus.value = activateViewModel.checkUserPresenceAsActivated(emailState, userType = UserType.TEACHER)
+            userPresenceStatus.value = activateViewModel.checkUserPresenceAsActivated(emailState)
 
                 when(userPresenceStatus.value){
                     is Success -> {

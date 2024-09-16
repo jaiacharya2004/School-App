@@ -222,11 +222,12 @@ fun ActivatePassword(navController: NavController,viewModel: ActivateViewModel )
                     Button(
                        // password matching operation pending
                         onClick = {
-                            buttonClickCount.intValue++
+
                             newPasswordError = newPassword.isEmpty()
                             confirmPasswordError = confirmPassword.isEmpty()
 
-                            if (!newPasswordError && !confirmPasswordError) {
+                            if (!newPasswordError && !confirmPasswordError && newPassword == confirmPassword) {
+                                buttonClickCount.intValue++
                                 isLoading = true
 
                             }

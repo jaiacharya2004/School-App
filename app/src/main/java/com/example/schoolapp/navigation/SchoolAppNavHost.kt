@@ -27,8 +27,8 @@ sealed class Route(val name: String) {
 @Composable
 fun SchoolAppNavHost(navController: NavHostController,viewModel:ActivateViewModel) {
     val errorViewModel: ErrorViewModel = viewModel()
-    val activateViewModel = viewModel
-    var authViewModel = ActivateViewModel()
+
+    val authViewModel = ActivateViewModel()
     // Check if the user is logged in or not by saving this data into a datastore and accessing it after the app is reopened by the user.
     // The user type data in the User class should listen to data in Role selection screens, which will help decide which kind of user has logged in.
     // We can instantiate the User class only if either the auth (Signup or Login) is successful.
@@ -39,7 +39,7 @@ fun SchoolAppNavHost(navController: NavHostController,viewModel:ActivateViewMode
         startDestination = Route.ActivateScreen.name
     ) {
         composable(route = Route.ActivateScreen.name) {
-            ActivateScreen(navController,activateViewModel)
+            ActivateScreen(navController,authViewModel)
         }
 //        composable(route = Route.NewScreen.name) {
 //            Route.NewScreen(navController)
@@ -48,10 +48,10 @@ fun SchoolAppNavHost(navController: NavHostController,viewModel:ActivateViewMode
             ForgetScreen(navController)
         }
         composable(route = Route.LoginScreen.name) {
-            LoginScreen(navController)
+            LoginScreen(navController,authViewModel)
         }
         composable(route = Route.ActivatePassword.name) { // Corrected route name
-            ActivatePassword(navController,activateViewModel )
+            ActivatePassword(navController,authViewModel )
         }
         composable(route = Route.HomeScreen.name) {
             HomeScreen(navController)

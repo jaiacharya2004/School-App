@@ -27,12 +27,13 @@ import androidx.compose.ui.text.input.VisualTransformation
 
 import androidx.navigation.NavController
 import com.example.schoolapp.R
+import com.example.schoolapp.authentication.b.Activate.ActivateViewModel
 import com.example.schoolapp.authentication.b.model.Response.Success
 import com.example.schoolapp.authentication.b.model.Response.Failure
 import com.example.schoolapp.authentication.b.model.Response.Loading
 
 @Composable
-fun LoginScreen(navController: NavController) {
+fun LoginScreen(navController: NavController,authViewModel: ActivateViewModel) {
     val navController = navController
     val emailState = remember { mutableStateOf("") }
     val passwordState = remember { mutableStateOf("") }
@@ -40,10 +41,9 @@ fun LoginScreen(navController: NavController) {
     var passwordVisibility by remember { mutableStateOf(true) }
     var emailError by remember { mutableStateOf(false) }
     var passwordError by remember { mutableStateOf(false) }
-    val loginViewModel = LoginViewModel()
     var isLoading by remember { mutableStateOf(false) }
     var buttonClickCount = remember { mutableIntStateOf(0) }
-    var userLoginStatus = loginViewModel.userSignInResponse
+    var userLoginStatus = authViewModel.userSignInResponse
 
 
     Box(
@@ -201,7 +201,7 @@ fun LoginScreen(navController: NavController) {
 
             if(buttonClickCount.intValue>0) {
                 LaunchedEffect(key1 = buttonClickCount) {
-                    userLoginStatus.value = loginViewModel.logInWithEmailAndPassword(emailState.value,passwordState.value)
+                    userLoginStatus.value = authViewModel.logInWithEmailAndPassword(emailState.value,passwordState.value)
                     Log.d("userLoginStatus final", "LoginScreen: $userLoginStatus")
 
 

@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 
 import com.example.schoolapp.appCentral.UserType
 import com.example.schoolapp.authentication.b.data.AuthRepositoryImpl
+import com.example.schoolapp.authentication.b.model.Response
 import com.example.schoolapp.authentication.b.model.Response.Loading
 import com.example.schoolapp.authentication.b.repository.SignInResponse
 import com.example.schoolapp.authentication.b.model.Response.Failure
@@ -25,7 +26,7 @@ class ActivateViewModel(): ViewModel() {
 
      var userEmail:String =""
 
-    var userTypeViewModel: UserType = UserType.TEACHER
+
 
     private val authRepository = AuthRepositoryImpl()
     var userPresenceStatus = mutableStateOf<SignInResponse>(Failure(Exception("User Does not exists")))
@@ -34,13 +35,16 @@ class ActivateViewModel(): ViewModel() {
     var userCreationStatus = mutableStateOf<SignInResponse>(Failure(Exception("Cannot create a new user:Error ")))
     private set
 
-    suspend fun checkUserPresenceAsActivated(email:String,userType: UserType):SignInResponse{
-            userTypeViewModel = userType
+    var userSignInResponse = mutableStateOf<SignInResponse>(Success(false))
+        private set
+
+    suspend fun checkUserPresenceAsActivated(email:String):SignInResponse{
+
             Log.d("checkUserPresence in viewmodel 0","{${userPresenceStatus.value}}")
 
             userPresenceStatus.value = Loading
 
-            userPresenceStatus.value = authRepository.checkUserPresenceAsActivated(email,userType)
+            userPresenceStatus.value = authRepository.checkUserPresenceAsActivated(email)
 
             Log.d("checkUserPresence in viewmodel 1","{${userPresenceStatus.value}}")
             if(userPresenceStatus.value is Success){
@@ -68,7 +72,19 @@ class ActivateViewModel(): ViewModel() {
 
     suspend fun activateUser(){
        Log.d("docId","$userPresenceStatus")
-        authRepository.markUserAsActivated( userTypeViewModel)
+        authRepository.markUserAsActivated()
+    }
+
+    suspend  fun logInWithEmailAndPassword(email: String, password: String) :SignInResponse {
+        userSignInResponse.value = Loading
+        userSignInResponse.value = authRepository.firebaseSignInWithEmailAndPassword(email, password)
+        return userSignInResponse.value
+    }
+
+
+    suspend fun sendPasswordResetEmail(email:String): Response<Boolean> {
+        return authRepository.sendPasswordResetEmail(email)
+
     }
 
 

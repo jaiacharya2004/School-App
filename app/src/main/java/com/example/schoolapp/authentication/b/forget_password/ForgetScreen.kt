@@ -24,6 +24,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.core.content.ContextCompat.startActivity
 import androidx.navigation.NavController
+import com.example.schoolapp.authentication.b.Activate.ActivateViewModel
 import com.example.schoolapp.authentication.b.model.Response.Success
 import com.example.schoolapp.authentication.b.model.Response.Failure
 import com.example.schoolapp.authentication.b.model.Response.Loading
@@ -31,11 +32,11 @@ import com.example.schoolapp.authentication.b.model.Response.Loading
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ForgetScreen(navController: NavController) {
+fun ForgetScreen(navController: NavController,authViewModel : ActivateViewModel) {
     val emailState = remember { mutableStateOf("") }
     val errorMessageState = remember { mutableStateOf("") }
     var buttonClickCount = remember { mutableIntStateOf(0) }
-    var forgetPasswordViewModel = ForgetPassViewModel()
+
 
     Box(
         modifier = Modifier
@@ -177,7 +178,7 @@ fun ForgetScreen(navController: NavController) {
 
             if (buttonClickCount.intValue > 0) {
                 LaunchedEffect(key1 = buttonClickCount) {
-                    val varName = forgetPasswordViewModel.sendPasswordResetEmail(emailState.value)
+                    val varName = authViewModel.sendPasswordResetEmail(emailState.value)
                     if(varName == Success(true)){
               // open the gmail app
                     }

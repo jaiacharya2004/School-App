@@ -95,15 +95,14 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), auth.currentUser == null)
 
-    override suspend fun checkUserPresenceAsActivated(email: String,userType: UserType)
+    override suspend fun checkUserPresenceAsActivated(email: String)
 
 
         = try {
             var returnAns :Response<Any> = Success(false)
-            val collectionRef = when (userType) {
-                UserType.TEACHER -> db.collection("Teachers")
-                UserType.SCHOOL_HEAD -> db.collection("Schools")
-            }
+            val collectionRef = db.collection("Teachers")
+
+
 
 
             val querySnapshot = collectionRef.whereEqualTo("Email", email).get().await()
@@ -137,12 +136,11 @@ class AuthRepositoryImpl @Inject constructor(
             Failure(e)
         }
 
-    override suspend fun markUserAsActivated( userType: UserType)
+    override suspend fun markUserAsActivated()
        =   try{
-        val collectionRef = when (userType) {
-            UserType.TEACHER -> db.collection("Teachers")
-            UserType.SCHOOL_HEAD -> db.collection("Schools")
-        }
+        val collectionRef = db.collection("Teachers")
+
+
 
         val activationStatus = hashMapOf("Activation Status" to true)
 
