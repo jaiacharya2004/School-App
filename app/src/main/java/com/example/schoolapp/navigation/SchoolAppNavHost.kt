@@ -45,7 +45,7 @@ fun SchoolAppNavHost(navController: NavHostController,viewModel:ActivateViewMode
 //            Route.NewScreen(navController)
 //        }
         composable(route = Route.ForgetScreen.name) {
-            ForgetScreen(navController)
+            ForgetScreen(navController,authViewModel)
         }
         composable(route = Route.LoginScreen.name) {
             LoginScreen(navController,authViewModel)
