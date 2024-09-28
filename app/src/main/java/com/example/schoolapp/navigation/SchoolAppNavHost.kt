@@ -10,8 +10,7 @@ import com.example.schoolapp.authentication.b.Activate.ActivateScreen
 import com.example.schoolapp.authentication.b.Activate.ActivateViewModel
 import com.example.schoolapp.authentication.b.forget_password.ForgetScreen
 import com.example.schoolapp.authentication.b.login.LoginScreen
-import com.example.schoolapp.errorMessages.authenticationErrorMessages.ErrorViewModel
-import com.example.schoolapp.presentation.HomeScreen
+import com.example.schoolapp.teacher.HomeScreen
 
 
 sealed class Route(val name: String) {
@@ -26,7 +25,7 @@ sealed class Route(val name: String) {
 
 @Composable
 fun SchoolAppNavHost(navController: NavHostController,viewModel:ActivateViewModel) {
-    val errorViewModel: ErrorViewModel = viewModel()
+
 
     val authViewModel = ActivateViewModel()
     // Check if the user is logged in or not by saving this data into a datastore and accessing it after the app is reopened by the user.

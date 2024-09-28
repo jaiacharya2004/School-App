@@ -31,10 +31,12 @@ import com.example.schoolapp.authentication.b.Activate.ActivateViewModel
 import com.example.schoolapp.authentication.b.model.Response.Success
 import com.example.schoolapp.authentication.b.model.Response.Failure
 import com.example.schoolapp.authentication.b.model.Response.Loading
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen(navController: NavController,authViewModel: ActivateViewModel) {
-    val navController = navController
+
     val emailState = remember { mutableStateOf("") }
     val passwordState = remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
@@ -201,6 +203,7 @@ fun LoginScreen(navController: NavController,authViewModel: ActivateViewModel) {
 
             if(buttonClickCount.intValue>0) {
                 LaunchedEffect(key1 = buttonClickCount) {
+
                     userLoginStatus.value = authViewModel.logInWithEmailAndPassword(emailState.value,passwordState.value)
                     Log.d("userLoginStatus final", "LoginScreen: $userLoginStatus")
 
@@ -220,8 +223,9 @@ fun LoginScreen(navController: NavController,authViewModel: ActivateViewModel) {
 
                         }
                     }
-                }
+
             }
+                }
 
                 Spacer(modifier = Modifier.height(16.dp))
 

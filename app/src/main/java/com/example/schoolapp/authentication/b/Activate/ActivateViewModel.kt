@@ -75,10 +75,12 @@ class ActivateViewModel(): ViewModel() {
         authRepository.markUserAsActivated()
     }
 
-    suspend  fun logInWithEmailAndPassword(email: String, password: String) :SignInResponse {
+    suspend fun logInWithEmailAndPassword(email: String, password: String) :SignInResponse {
         userSignInResponse.value = Loading
         userSignInResponse.value = authRepository.firebaseSignInWithEmailAndPassword(email, password)
         return userSignInResponse.value
+
+        
     }
 
 
@@ -86,6 +88,8 @@ class ActivateViewModel(): ViewModel() {
         return authRepository.sendPasswordResetEmail(email)
 
     }
+
+
 
 
 }

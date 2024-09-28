@@ -1,4 +1,4 @@
-package com.example.schoolapp.presentation
+package com.example.schoolapp.teacher
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable

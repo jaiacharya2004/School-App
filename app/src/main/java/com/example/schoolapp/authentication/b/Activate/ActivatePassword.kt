@@ -30,7 +30,8 @@ import com.example.schoolapp.authentication.b.authErrors.ErrorViewModel
 import com.example.schoolapp.authentication.b.model.Response.Loading
 import com.example.schoolapp.authentication.b.model.Response.Failure
 import com.example.schoolapp.authentication.b.model.Response.Success
-
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -241,28 +242,33 @@ fun ActivatePassword(navController: NavController,viewModel: ActivateViewModel )
 
                     if (buttonClickCount.intValue > 0) {
                         LaunchedEffect(key1 = buttonClickCount) {
-                            if (newPassword.isNotEmpty()) {
-                                userCreationState.value = activateViewModel.confirmPassword(password = newPassword)
 
-                                when(userCreationState.value){
-                                    is Success -> {
+                                if (newPassword.isNotEmpty()) {
+                                    userCreationState.value =
+                                        activateViewModel.confirmPassword(password = newPassword)
 
-                                        activateViewModel.activateUser()
-                                        // complete the instantiation of the user
-                                        navController.navigate("home_screen")
+                                    when (userCreationState.value) {
+                                        is Success -> {
 
+                                            activateViewModel.activateUser()
+
+                                            // complete the instantiation of the user
+                                            navController.navigate("home_screen")
+
+                                        }
+
+                                        is Failure -> {
+
+                                        }
+
+                                        is Loading -> {
+
+                                        }
                                     }
-                                    is Failure -> {
-
-                                    }
-                                     is Loading -> {
-
-                                     }
                                 }
-                            }
+
+
                         }
-
-
                     }
                 }
 

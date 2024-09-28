@@ -1,15 +1,12 @@
 package com.example.schoolapp.authentication.b.data
 
 import android.util.Log
-import com.example.schoolapp.appCentral.UserType
 import com.example.schoolapp.authentication.b.model.Response
 import com.example.schoolapp.authentication.b.model.Response.Success
 import com.example.schoolapp.authentication.b.model.Response.Failure
 
 import com.example.schoolapp.authentication.b.repository.AuthRepository
-import com.example.schoolapp.authentication.b.repository.UserExistsResponse
 import com.example.schoolapp.com.example.schoolapp.FirebaseUtil
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuth.AuthStateListener
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.getField
@@ -21,7 +18,6 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.math.sign
 
 @Singleton
 class AuthRepositoryImpl @Inject constructor(
@@ -32,6 +28,7 @@ class AuthRepositoryImpl @Inject constructor(
     private val db = FirebaseUtil.getFireStoreDbCustom()
     override val currentUser get() = auth.currentUser
     override var docId: String ="NA"
+
 
 
     override suspend fun firebaseSignUpWithEmailAndPassword(
@@ -52,10 +49,22 @@ class AuthRepositoryImpl @Inject constructor(
         Failure(e)
     }
 
+    //Login
+    /* What we need after login
+    Teacher :-
+    Teacher Document -> to edit his/her name and other details instantiating teacher object
+
+    Classes Document
+    Access to write the Attendance sub collection of Classes document
+
+     */
     override suspend fun firebaseSignInWithEmailAndPassword(
         email: String, password: String
     ) = try {
-       val signInResult = auth.signInWithEmailAndPassword(email, password).await()
+       Log.d("fc called","yes")
+
+        val signInResult = auth.signInWithEmailAndPassword(email, password).await()
+
        val uid = signInResult.user?.uid?: throw Exception("Unsuccessful sign in operation")
         Success(uid)
     } catch (e: Exception) {

@@ -53,6 +53,8 @@ import com.example.schoolapp.authentication.b.authErrors.ErrorViewModel
 import com.example.schoolapp.authentication.b.model.Response.Loading
 import com.example.schoolapp.authentication.b.model.Response.Failure
 import com.example.schoolapp.authentication.b.model.Response.Success
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 // user type selection is not done as per user selection on screen it is set to default teacher
@@ -60,13 +62,13 @@ import com.example.schoolapp.authentication.b.model.Response.Success
 // we are getting two time the log message at line number 215 - 221 may be its due to viewModelScope
 @SuppressLint("SuspiciousIndentation")
 @Composable
-fun ActivateScreen(navController: NavController,viewModel: ActivateViewModel ) {
+fun ActivateScreen(navController: NavController,activateViewModel: ActivateViewModel ) {
    val errorViewModel = ErrorViewModel()
     var emailState by remember { mutableStateOf("") }
     var selectedOption by remember { mutableStateOf("Teacher") } // Preselect "Teacher"
     var showError by remember { mutableStateOf(false) } // Track whether to show the error message
     val errorState by errorViewModel.errorState.collectAsState()
-    val activateViewModel = viewModel
+
     var isLoading by remember { mutableStateOf(false) }
     var userPresenceStatus= activateViewModel.userPresenceStatus
     var buttonClickCount = remember { mutableIntStateOf(0) }
@@ -212,32 +214,36 @@ fun ActivateScreen(navController: NavController,viewModel: ActivateViewModel ) {
 if(buttonClickCount.intValue>0) {
     LaunchedEffect(key1 = buttonClickCount) { // Key based on email change
 
-        if (emailState.isNotEmpty()) {
+            if (emailState.isNotEmpty()) {
 
-            userPresenceStatus.value = activateViewModel.checkUserPresenceAsActivated(emailState)
+                userPresenceStatus.value =
+                    activateViewModel.checkUserPresenceAsActivated(emailState)
 
-                when(userPresenceStatus.value){
+                when (userPresenceStatus.value) {
                     is Success -> {
                         // instantiate the user with docId at higher state
                         activateViewModel.userEmail = emailState
-                        Log.d("Email","${activateViewModel.userEmail}")
+                        Log.d("Email", "${activateViewModel.userEmail}")
                         navController.navigate("activate_password")
 
                     }
+
                     is Failure -> {
                         Log.d("userPresenceStatus", "$userPresenceStatus.value.toString()")
 
                     }
-                    is Loading ->{
+
+                    is Loading -> {
                         Log.d("userPresenceStatus", "$userPresenceStatus.value.toString()")
 
                     }
 
                 }
 
-        } else {
-            isLoading = false // Reset loading state if email is empty
-        }
+            } else {
+                isLoading = false // Reset loading state if email is empty
+            }
+
     }
 }
 

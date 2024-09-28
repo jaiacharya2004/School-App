@@ -1,7 +1,6 @@
 package com.example.schoolapp.authentication.b.forget_password
 
-import android.content.Intent
-import android.net.Uri
+
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -22,12 +21,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.core.content.ContextCompat.startActivity
 import androidx.navigation.NavController
 import com.example.schoolapp.authentication.b.Activate.ActivateViewModel
 import com.example.schoolapp.authentication.b.model.Response.Success
-import com.example.schoolapp.authentication.b.model.Response.Failure
-import com.example.schoolapp.authentication.b.model.Response.Loading
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -178,9 +176,10 @@ fun ForgetScreen(navController: NavController,authViewModel : ActivateViewModel)
 
             if (buttonClickCount.intValue > 0) {
                 LaunchedEffect(key1 = buttonClickCount) {
+
                     val varName = authViewModel.sendPasswordResetEmail(emailState.value)
-                    if(varName == Success(true)){
-              // open the gmail app
+                    if (varName == Success(true)) {
+                        // open the gmail app
                     }
 
                 }
